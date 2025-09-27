@@ -30,7 +30,7 @@ export default function NotificationModal({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Send Podcast Notification</h2>
+          <h2>發送衛教影音通知</h2>
           <button className="modal-close" onClick={onClose}>
             X
           </button>
@@ -38,7 +38,7 @@ export default function NotificationModal({
         
         <div className="modal-body">
           <div className="selected-patients">
-            <h3>Selected Patients ({selectedPatients.length}):</h3>
+            <h3>已選擇患者 ({selectedPatients.length})：</h3>
             <div className="patient-list">
               {selectedPatients.map(user => (
                 <div key={user._id} className="selected-patient">
@@ -50,7 +50,7 @@ export default function NotificationModal({
           </div>
 
           <div className="form-group">
-            <label htmlFor="podcastUrl">Podcast URL:</label>
+            <label htmlFor="podcastUrl">影音網址：</label>
             <input
               id="podcastUrl"
               type="url"
@@ -69,14 +69,14 @@ export default function NotificationModal({
             className="cancel-button"
             disabled={sending}
           >
-            Cancel
+            取消
           </button>
           <button
             onClick={handleSubmit}
             className="send-button"
             disabled={sending || !podcastUrl.trim()}
           >
-            {sending ? 'Sending...' : `Send to ${selectedPatients.length} patients`}
+            {sending ? '發送中...' : `發送給 ${selectedPatients.length} 位患者`}
           </button>
         </div>
       </div>

@@ -32,7 +32,7 @@ export default function EditPatientRecord() {
       const response = await fetch(`/api/users/${patientId}`);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch patient');
+        throw new Error('獲取患者資料失敗');
       }
 
       const data = await response.json();
@@ -51,7 +51,7 @@ export default function EditPatientRecord() {
         setNotes(latest.notes || '');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : '發生錯誤');
     } finally {
       setLoading(false);
     }
@@ -61,7 +61,7 @@ export default function EditPatientRecord() {
     e.preventDefault();
     
     if (!latestRecord) {
-      setError('No record to update');
+      setError('沒有記錄可更新');
       return;
     }
 
@@ -86,13 +86,13 @@ export default function EditPatientRecord() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update record');
+        throw new Error('更新記錄失敗');
       }
 
       alert('病歷記錄更新成功！');
       router.push('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save');
+      setError(err instanceof Error ? err.message : '儲存失敗');
     } finally {
       setSaving(false);
     }

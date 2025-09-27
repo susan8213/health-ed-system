@@ -24,13 +24,13 @@ export default function WeeklyRecords() {
       const response = await fetch('/api/records/weekly');
       
       if (!response.ok) {
-        throw new Error('Failed to fetch weekly records');
+        throw new Error('獲取週記錄失敗');
       }
 
       const data = await response.json();
       setRecords(data.records);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : '發生錯誤');
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ export default function WeeklyRecords() {
   if (loading) {
     return (
       <div className="container">
-        <div className="loading">Loading weekly records...</div>
+        <div className="loading">載入本週記錄中...</div>
       </div>
     );
   }
@@ -67,8 +67,8 @@ export default function WeeklyRecords() {
   if (error) {
     return (
       <div className="container">
-        <div className="error">Error: {error}</div>
-        <a href="/" className="search-button">Back to Patient Search</a>
+        <div className="error">錯誤: {error}</div>
+        <a href="/" className="search-button">返回患者搜尋</a>
       </div>
     );
   }
@@ -77,25 +77,25 @@ export default function WeeklyRecords() {
     <div className="container">
       <div className="records-container">
         <div className="records-header">
-          <h1>This Week's Medical Records</h1>
+          <h1>本週問診記錄</h1>
           <p className="week-range">
             {weekRange.start} - {weekRange.end}
           </p>
           <div className="header-actions">
             <a href="/" className="back-button">
-              Back to Patient Search
+              返回患者搜尋
             </a>
           </div>
         </div>
 
         {records.length === 0 ? (
           <div className="no-results">
-            No medical records found for this week.
+            本週沒有找到問診記錄。
           </div>
         ) : (
           <div className="records-list">
             <div className="records-count">
-              Found {records.length} record{records.length !== 1 ? 's' : ''} this week
+              本週找到 {records.length} 筆記錄
             </div>
             
             {records.map((record, index) => (
@@ -123,7 +123,7 @@ export default function WeeklyRecords() {
                 <div className="record-content">
                   {record.symptoms.length > 0 && (
                     <div className="record-section">
-                      <strong>Symptoms:</strong>
+                      <strong>症狀：</strong>
                       <div className="symptoms-list">
                         {record.symptoms.map((symptom, idx) => (
                           <span key={idx} className="symptom-tag">
@@ -136,7 +136,7 @@ export default function WeeklyRecords() {
 
                   {record.syndromes.length > 0 && (
                     <div className="record-section">
-                      <strong>TCM Syndromes:</strong>
+                      <strong>中醫證候：</strong>
                       <div className="syndromes-list">
                         {record.syndromes.map((syndrome, idx) => (
                           <span key={idx} className="syndrome-tag">
@@ -149,7 +149,7 @@ export default function WeeklyRecords() {
 
                   {record.notes && (
                     <div className="record-section">
-                      <strong>Clinical Notes:</strong>
+                      <strong>診療備註：</strong>
                       <p className="notes-text">{record.notes}</p>
                     </div>
                   )}
@@ -160,7 +160,7 @@ export default function WeeklyRecords() {
                     href={`/edit/${record.patientId}`}
                     className="edit-button-small"
                   >
-                    Edit Record
+                    編輯記錄
                   </a>
                 </div>
               </div>

@@ -43,13 +43,13 @@ export default function UserCard({ user: patient, isSelected, onSelect }: Patien
       <div className="user-details">
         {recentRecord && (
           <div className="recent-visit">
-            <strong>Last Visit:</strong> {new Date(recentRecord.visitDate).toLocaleDateString()}
+            <strong>最近就診：</strong> {new Date(recentRecord.visitDate).toLocaleDateString()}
           </div>
         )}
 
         {recentRecord && recentRecord.symptoms.length > 0 && (
           <div className="recent-symptoms">
-            <strong>Recent Symptoms:</strong>
+            <strong>近期症狀：</strong>
             <div className="symptoms-list">
               {recentRecord.symptoms.slice(0, 4).map((symptom, index) => (
                 <span key={index} className="symptom-tag">
@@ -62,7 +62,7 @@ export default function UserCard({ user: patient, isSelected, onSelect }: Patien
 
         {recentRecord && recentRecord.syndromes.length > 0 && (
           <div className="recent-syndromes">
-            <strong>Recent Syndromes:</strong>
+            <strong>近期證候：</strong>
             <div className="syndromes-list">
               {recentRecord.syndromes.map((syndrome, index) => (
                 <span key={index} className="syndrome-tag">
@@ -75,7 +75,7 @@ export default function UserCard({ user: patient, isSelected, onSelect }: Patien
 
         {patient.historyRecords && patient.historyRecords.length > 0 && (
           <div className="visit-count">
-            <strong>Total Visits:</strong> {patient.historyRecords.length}
+            <strong>總就診次數：</strong> {patient.historyRecords.length}
           </div>
         )}
 
@@ -84,7 +84,7 @@ export default function UserCard({ user: patient, isSelected, onSelect }: Patien
             href={`/patient/${patient._id}/records`}
             className="records-button"
           >
-            View Patient Records
+            查看病歷記錄
           </a>
         </div>
       </div>

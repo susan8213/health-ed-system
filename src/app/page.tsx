@@ -46,13 +46,13 @@ export default function Home() {
       const response = await fetch(`/api/users?${params.toString()}`);
       
       if (!response.ok) {
-        throw new Error('Failed to search patients');
+        throw new Error('搜尋患者失敗');
       }
 
       const data = await response.json();
       setUsers(data.users);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : '發生錯誤');
       setUsers([]);
     } finally {
       setLoading(false);
@@ -80,12 +80,12 @@ export default function Home() {
 
   const handleSendNotifications = async () => {
     if (!podcastUrl.trim()) {
-      alert('Please enter a podcast URL');
+      alert('請輸入播客網址');
       return;
     }
 
     if (selectedPatients.size === 0) {
-      alert('Please select at least one patient');
+      alert('請至少選擇一位患者');
       return;
     }
 
@@ -107,17 +107,17 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send notifications');
+        throw new Error('發送通知失敗');
       }
 
       const result = await response.json();
-      alert(`Notifications sent successfully to ${result.sentCount} patients!`);
+      alert(`通知已成功發送給 ${result.sentCount} 位患者！`);
       setShowModal(false);
       setPodcastUrl('');
       setLinkPreview(null);
       setSelectedPatients(new Set());
     } catch (err) {
-      alert('Failed to send notifications: ' + (err instanceof Error ? err.message : 'Unknown error'));
+      alert('發送通知失敗：' + (err instanceof Error ? err.message : '未知錯誤'));
     } finally {
       setSending(false);
     }
@@ -131,14 +131,14 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to seed database');
+        throw new Error('資料庫初始化失敗');
       }
 
       // Refresh the patient list after seeding
       await handleSearch({});
-      alert('Database seeded successfully!');
+      alert('資料庫初始化成功！');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to seed database');
+      setError(err instanceof Error ? err.message : '資料庫初始化失敗');
     } finally {
       setLoading(false);
     }
@@ -203,7 +203,7 @@ export default function Home() {
 
       {error && (
         <div className="error">
-          Error: {error}
+          錯誤：{error}
         </div>
       )}
 
@@ -211,7 +211,7 @@ export default function Home() {
         <div className="results-header">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h2>
-              {loading ? 'Searching...' : `Found ${users.length} patient${users.length !== 1 ? 's' : ''}`}
+              {loading ? '搜尋中...' : `找到 ${users.length} 位患者`}
             </h2>
             <div className="header-buttons">
               {selectedPatients.size > 0 && (
@@ -220,7 +220,7 @@ export default function Home() {
                   className="notification-button"
                   disabled={loading}
                 >
-                  Send Podcast ({selectedPatients.size} selected)
+                  發送播客 ({selectedPatients.size} 已選擇)
                 </button>
               )}
               <button
@@ -236,7 +236,7 @@ export default function Home() {
                   fontSize: '14px'
                 }}
               >
-                Seed Sample Data
+                建立測試資料
               </button>
             </div>
           </div>
@@ -244,13 +244,13 @@ export default function Home() {
 
         {loading && (
           <div className="loading">
-            Searching patients...
+            搜尋患者中...
           </div>
         )}
 
         {!loading && hasSearched && users.length === 0 && (
           <div className="no-results">
-            No patients found. Try a different search term or seed the database with sample data.
+            沒有找到患者。請嘗試不同的搜尋詞彙或建立測試資料。
           </div>
         )}
 
@@ -263,7 +263,7 @@ export default function Home() {
                   checked={selectedPatients.size === users.filter(u => u.lineId).length && users.filter(u => u.lineId).length > 0}
                   onChange={(e) => handleSelectAll(e.target.checked)}
                 />
-                Select All Patients with LINE ID ({users.filter(u => u.lineId).length} available)
+                全選有 LINE ID 的患者 ({users.filter(u => u.lineId).length} 位可用)
               </label>
             </div>
             {users.map((user) => (
@@ -282,7 +282,7 @@ export default function Home() {
           <div className="modal-overlay" onClick={() => setShowModal(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
-                <h2>Send Podcast Notification</h2>
+                <h2>發送播客通知</h2>
                 <button 
                   className="modal-close"
                   onClick={() => setShowModal(false)}
@@ -293,7 +293,7 @@ export default function Home() {
               
               <div className="modal-body">
                 <div className="selected-patients">
-                  <h3>Selected Patients ({selectedUsersWithLine.length}):</h3>
+                  <h3>已選擇患者 ({selectedUsersWithLine.length})：</h3>
                   <div className="patient-list">
                     {selectedUsersWithLine.map(user => (
                       <div key={user._id} className="selected-patient">
@@ -305,7 +305,7 @@ export default function Home() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="podcastUrl">Podcast URL:</label>
+                  <label htmlFor="podcastUrl">播客網址：</label>
                   <input
                     id="podcastUrl"
                     type="url"
@@ -318,7 +318,7 @@ export default function Home() {
                   
                   {loadingPreview && (
                     <div className="link-preview loading">
-                      <div className="preview-loading">Loading preview...</div>
+                      <div className="preview-loading">載入預覽中...</div>
                     </div>
                   )}
 
@@ -355,14 +355,14 @@ export default function Home() {
                   className="cancel-button"
                   disabled={sending}
                 >
-                  Cancel
+                  取消
                 </button>
                 <button
                   onClick={handleSendNotifications}
                   className="send-button"
                   disabled={sending || !podcastUrl.trim()}
                 >
-                  {sending ? 'Sending...' : `Send to ${selectedUsersWithLine.length} patients`}
+                  {sending ? '發送中...' : `發送給 ${selectedUsersWithLine.length} 位患者`}
                 </button>
               </div>
             </div>

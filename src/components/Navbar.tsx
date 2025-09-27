@@ -10,7 +10,7 @@ export default function Navbar() {
       <div className="nav-container">
         <div className="nav-brand">
           <a href="/" className="brand-link">
-            TCM Clinic
+            智慧醫療管理系統
           </a>
         </div>
         
@@ -19,13 +19,13 @@ export default function Navbar() {
             href="/" 
             className={`nav-link ${pathname === '/' ? 'active' : ''}`}
           >
-            Patient Search
+            患者搜尋
           </a>
           <a 
             href="/records" 
             className={`nav-link ${pathname === '/records' ? 'active' : ''}`}
           >
-            This Week's Records
+            本週記錄
           </a>
         </div>
       </div>

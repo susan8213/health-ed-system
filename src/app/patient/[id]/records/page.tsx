@@ -25,13 +25,13 @@ export default function PatientRecords() {
       const response = await fetch(`/api/users/${patientId}`);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch patient');
+        throw new Error('獲取患者資料失敗');
       }
 
       const data = await response.json();
       setPatient(data.patient);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : '發生錯誤');
     } finally {
       setLoading(false);
     }
@@ -44,7 +44,7 @@ export default function PatientRecords() {
   if (loading) {
     return (
       <div className="container">
-        <div className="loading">Loading patient records...</div>
+        <div className="loading">載入患者記錄中...</div>
       </div>
     );
   }
@@ -52,9 +52,9 @@ export default function PatientRecords() {
   if (error || !patient) {
     return (
       <div className="container">
-        <div className="error">Error: {error || 'Patient not found'}</div>
+        <div className="error">錯誤：{error || '找不到患者'}</div>
         <button onClick={handleBack} className="search-button">
-          Back to Patient Search
+          返回患者搜尋
         </button>
       </div>
     );
@@ -70,25 +70,25 @@ export default function PatientRecords() {
     <div className="container">
       <div className="records-container">
         <div className="records-header">
-          <h1>{patient.name} - Medical Records</h1>
+          <h1>{patient.name} - 病歷記錄</h1>
           {patient.lineId && (
             <p className="patient-line-id">LINE ID: {patient.lineId}</p>
           )}
           <div className="header-actions">
             <button onClick={handleBack} className="back-button">
-              Back to Patient Search
+              返回患者搜尋
             </button>
           </div>
         </div>
 
         {sortedRecords.length === 0 ? (
           <div className="no-results">
-            No medical records found for this patient.
+            找不到此患者的病歷記錄。
           </div>
         ) : (
           <div className="records-list">
             <div className="records-count">
-              {sortedRecords.length} record{sortedRecords.length !== 1 ? 's' : ''} found
+              找到 {sortedRecords.length} 筆記錄
             </div>
             
             {sortedRecords.map((record, index) => (
@@ -106,14 +106,14 @@ export default function PatientRecords() {
                     </span>
                   </div>
                   <div className="record-status">
-                    {index === 0 && <span className="latest-badge">Latest</span>}
+                    {index === 0 && <span className="latest-badge">最新</span>}
                   </div>
                 </div>
 
                 <div className="record-content">
                   {record.symptoms.length > 0 && (
                     <div className="record-section">
-                      <strong>Symptoms:</strong>
+                      <strong>症狀：</strong>
                       <div className="symptoms-list">
                         {record.symptoms.map((symptom, idx) => (
                           <span key={idx} className="symptom-tag">
@@ -126,7 +126,7 @@ export default function PatientRecords() {
 
                   {record.syndromes.length > 0 && (
                     <div className="record-section">
-                      <strong>TCM Syndromes:</strong>
+                      <strong>中醫證候：</strong>
                       <div className="syndromes-list">
                         {record.syndromes.map((syndrome, idx) => (
                           <span key={idx} className="syndrome-tag">
@@ -139,18 +139,18 @@ export default function PatientRecords() {
 
                   {record.notes && (
                     <div className="record-section">
-                      <strong>Clinical Notes:</strong>
+                      <strong>診療備註：</strong>
                       <p className="notes-text">{record.notes}</p>
                     </div>
                   )}
 
                   <div className="record-meta">
                     <small className="created-date">
-                      Created: {new Date(record.createdAt).toLocaleString()}
+                      建立時間：{new Date(record.createdAt).toLocaleString()}
                     </small>
                     {record.updatedAt && new Date(record.updatedAt).getTime() !== new Date(record.createdAt).getTime() && (
                       <small className="updated-date">
-                        Updated: {new Date(record.updatedAt).toLocaleString()}
+                        更新時間：{new Date(record.updatedAt).toLocaleString()}
                       </small>
                     )}
                   </div>
@@ -162,7 +162,7 @@ export default function PatientRecords() {
                       href={`/edit/${patient._id}`}
                       className="edit-button-small"
                     >
-                      Edit Latest Record
+                      編輯最新記錄
                     </a>
                   </div>
                 )}

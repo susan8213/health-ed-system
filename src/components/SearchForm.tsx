@@ -36,7 +36,7 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
   return (
     <div className="search-container">
       <h1 style={{ marginBottom: '20px', fontSize: '28px', fontWeight: '600' }}>
-        TCM Clinic - Patient Search
+        智慧醫療管理系統 - 患者搜尋
       </h1>
       <SearchHelp />
       <form onSubmit={handleSubmit} className="search-form">
@@ -45,7 +45,7 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Search by name or LINE ID (use spaces for multiple keywords)..."
+            placeholder="按姓名或 LINE ID 搜尋（使用空格分隔多個關鍵字）..."
             className="search-input"
           />
         </div>
@@ -55,7 +55,7 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
             type="text"
             value={symptoms}
             onChange={(e) => setSymptoms(e.target.value)}
-            placeholder="Filter by symptoms (e.g., Headache Fatigue or Headache, Fatigue)..."
+            placeholder="按症狀篩選（例如：頭痛 疲勞 或 頭痛, 疲勞）..."
             className="search-input"
           />
           
@@ -63,7 +63,7 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
             type="text"
             value={conditions}
             onChange={(e) => setConditions(e.target.value)}
-            placeholder="Filter by TCM syndromes (e.g., Liver Fire or Liver Fire, Kidney Yang)..."
+            placeholder="按中醫證候篩選（例如：肝火旺盛 或 肝火旺盛, 腎陽虛）..."
             className="search-input"
           />
         </div>
@@ -75,7 +75,7 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
               disabled={loading}
               className="search-button"
             >
-              {loading ? 'Searching...' : 'Search Patients'}
+              {loading ? '搜尋中...' : '搜尋患者'}
             </button>
             
             <button
@@ -84,7 +84,7 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
               disabled={loading}
               className="clear-button"
             >
-              Clear
+              清除
             </button>
           </div>
         </div>
