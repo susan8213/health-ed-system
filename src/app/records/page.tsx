@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Patient, TCMHistoryRecord } from '@/types/user';
+import WordCloud from '@/components/WordCloud';
+import { generateWordCloudData, generateMockWordCloudData, WordCloudItem } from '@/utils/wordcloud';
 
 interface RecordWithPatient extends TCMHistoryRecord {
   patientName: string;
@@ -13,6 +15,7 @@ export default function WeeklyRecords() {
   const [records, setRecords] = useState<RecordWithPatient[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [wordCloudData, setWordCloudData] = useState<WordCloudItem[]>([]);
 
   useEffect(() => {
     fetchWeeklyRecords();
@@ -29,6 +32,12 @@ export default function WeeklyRecords() {
 
       const data = await response.json();
       setRecords(data.records);
+      
+      // 生成文字雲數據
+      // setWordCloudData(generateMockWordCloudData());
+      const cloudData = generateWordCloudData(data.records);
+      setWordCloudData(cloudData);
+      
     } catch (err) {
       setError(err instanceof Error ? err.message : '發生錯誤');
     } finally {
@@ -85,6 +94,20 @@ export default function WeeklyRecords() {
             <a href="/" className="back-button">
               返回患者搜尋
             </a>
+          </div>
+        </div>
+
+        {/* 文字雲區域 */}
+        <div className="word-cloud-section">
+          <h2>常見症狀</h2>
+          {/* 說明與 legend 已由 WordCloud 元件自帶 */}
+          
+          <div className="word-cloud-wrapper">
+            <WordCloud 
+              data={wordCloudData}
+              width={640}
+              height={480}
+            />
           </div>
         </div>
 
