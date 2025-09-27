@@ -1355,3 +1355,104 @@ body {
     gap: 10px;
   }
 }
+
+/* Collapsible section for statistics & word cloud */
+.collapsible-section {
+  margin: 32px 0 36px 0;
+  border-radius: 12px;
+  background: #f7f8fa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+.collapsible-header {
+  width: 100%;
+  background: #e3e7f1;
+  border: none;
+  outline: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #3949ab;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.collapsible-header:hover {
+  background: #d1d9ec;
+}
+.collapsible-arrow {
+  font-size: 1.2em;
+  margin-left: 8px;
+  color: #3949ab;
+}
+.collapsible-content {
+  padding: 24px 24px 8px 24px;
+  animation: fadeIn 0.3s;
+}
+@media (max-width: 600px) {
+  .collapsible-content {
+    padding: 12px 8px 4px 8px;
+  }
+  .collapsible-header {
+    font-size: 1rem;
+    padding: 12px 12px;
+  }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* StatisticCard & StatisticGroup styles */
+.statistic-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 24px 0 32px 0;
+}
+.statistic-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 20px 32px;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s;
+}
+.statistic-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+.statistic-title {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.statistic-count {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #1a237e;
+  letter-spacing: 2px;
+}
+@media (max-width: 600px) {
+  .statistic-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .statistic-card {
+    min-width: 0;
+    width: 100%;
+    padding: 16px 0;
+  }
+  .statistic-title {
+    font-size: 1rem;
+  }
+  .statistic-count {
+    font-size: 1.5rem;
+  }
+}

@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { Patient, TCMHistoryRecord } from '@/types/user';
 import WordCloud from '@/components/WordCloud';
+import StatisticGroup from '@/components/StatisticGroup';
+import StatisticCard from '@/components/StatisticCard';
+import CollapsibleSection from '@/components/CollapsibleSection';
 import { generateWordCloudData, generateMockWordCloudData, WordCloudItem } from '@/utils/wordcloud';
 
 interface RecordWithPatient extends TCMHistoryRecord {
@@ -97,99 +100,102 @@ export default function WeeklyRecords() {
           </div>
         </div>
 
-        {/* 文字雲區域 */}
-        <div className="word-cloud-section">
-          <h2>常見症狀</h2>
-          {/* 說明與 legend 已由 WordCloud 元件自帶 */}
-          
-          <div className="word-cloud-wrapper">
-            <WordCloud 
-              data={wordCloudData}
-              width={640}
-              height={480}
-            />
-          </div>
-        </div>
 
-        {records.length === 0 ? (
-          <div className="no-results">
-            本週沒有找到問診記錄。
-          </div>
-        ) : (
-          <div className="records-list">
-            <div className="records-count">
-              本週找到 {records.length} 筆記錄
+        {/* 可摺疊統計與文字雲區塊 */}
+        <CollapsibleSection title="本週統計" defaultOpen>
+          <StatisticGroup>
+            <StatisticCard title="問診人數" count={records.length} />
+            <StatisticCard title="問診訊息數" count={0} />
+            <StatisticCard title="關鍵字數量" count={wordCloudData.length} />
+          </StatisticGroup>
+          <div className="word-cloud-section">
+            <h2>常見症狀</h2>
+            <div className="word-cloud-wrapper">
+              <WordCloud 
+                data={wordCloudData}
+                width={640}
+                height={480}
+              />
             </div>
-            
-            {records.map((record, index) => (
-              <div key={`${record.patientId}-${record.visitDate}-${index}`} className="record-card">
-                <div className="record-header">
-                  <div className="patient-info">
-                    <h3>{record.patientName}</h3>
-                    {record.patientLineId && (
-                      <span className="line-id">LINE: {record.patientLineId}</span>
+          </div>
+        </CollapsibleSection>
+
+        <CollapsibleSection title="問診紀錄明細" defaultOpen>
+          {records.length === 0 ? (
+            <div className="no-results">
+              本週沒有找到問診記錄。
+            </div>
+          ) : (
+            <div className="records-list">
+              <div className="records-count">
+                本週找到 {records.length} 筆記錄
+              </div>
+              {records.map((record, index) => (
+                <div key={`${record.patientId}-${record.visitDate}-${index}`} className="record-card">
+                  <div className="record-header">
+                    <div className="patient-info">
+                      <h3>{record.patientName}</h3>
+                      {record.patientLineId && (
+                        <span className="line-id">LINE: {record.patientLineId}</span>
+                      )}
+                    </div>
+                    <div className="visit-info">
+                      <span className="visit-date">
+                        {new Date(record.visitDate).toLocaleDateString()}
+                      </span>
+                      <span className="visit-time">
+                        {new Date(record.visitDate).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="record-content">
+                    {record.symptoms.length > 0 && (
+                      <div className="record-section">
+                        <strong>症狀：</strong>
+                        <div className="symptoms-list">
+                          {record.symptoms.map((symptom, idx) => (
+                            <span key={idx} className="symptom-tag">
+                              {symptom}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {record.syndromes.length > 0 && (
+                      <div className="record-section">
+                        <strong>中醫證候：</strong>
+                        <div className="syndromes-list">
+                          {record.syndromes.map((syndrome, idx) => (
+                            <span key={idx} className="syndrome-tag">
+                              {syndrome}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {record.notes && (
+                      <div className="record-section">
+                        <strong>診療備註：</strong>
+                        <p className="notes-text">{record.notes}</p>
+                      </div>
                     )}
                   </div>
-                  <div className="visit-info">
-                    <span className="visit-date">
-                      {new Date(record.visitDate).toLocaleDateString()}
-                    </span>
-                    <span className="visit-time">
-                      {new Date(record.visitDate).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
+                  <div className="record-actions">
+                    <a 
+                      href={`/edit/${record.patientId}`}
+                      className="edit-button-small"
+                    >
+                      編輯記錄
+                    </a>
                   </div>
                 </div>
-
-                <div className="record-content">
-                  {record.symptoms.length > 0 && (
-                    <div className="record-section">
-                      <strong>症狀：</strong>
-                      <div className="symptoms-list">
-                        {record.symptoms.map((symptom, idx) => (
-                          <span key={idx} className="symptom-tag">
-                            {symptom}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {record.syndromes.length > 0 && (
-                    <div className="record-section">
-                      <strong>中醫證候：</strong>
-                      <div className="syndromes-list">
-                        {record.syndromes.map((syndrome, idx) => (
-                          <span key={idx} className="syndrome-tag">
-                            {syndrome}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {record.notes && (
-                    <div className="record-section">
-                      <strong>診療備註：</strong>
-                      <p className="notes-text">{record.notes}</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="record-actions">
-                  <a 
-                    href={`/edit/${record.patientId}`}
-                    className="edit-button-small"
-                  >
-                    編輯記錄
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </CollapsibleSection>
       </div>
     </div>
   );
