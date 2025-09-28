@@ -20,42 +20,35 @@ export async function GET() {
     endOfWeek.setHours(23, 59, 59, 999);
 
     // Find all patients with history records in this week
-    const patients = await collection.find({
-      'historyRecords.visitDate': {
-        $gte: startOfWeek,
-        $lte: endOfWeek
+    const patients = await collection.find(
+      {
+        'historyRecords.visitDate': {
+          $gte: startOfWeek,
+          $lte: endOfWeek
+        }
+      },
+      {
+        projection: {
+          name: 1,
+          lineId: 1,
+          historyRecords: {
+            $elemMatch: {
+              visitDate: { $gte: startOfWeek, $lte: endOfWeek }
+            }
+          }
+        }
       }
-    }).toArray();
+    )
+    .sort({ 'historyRecords.visitDate': -1 }) // Sort by most recent visitDate first
+    .toArray();
+    console.log('Patients with records this week:', patients);
 
     const typedPatients = patients as unknown as Patient[];
 
-    // Extract and flatten all records from this week with patient info
-    const weeklyRecords: any[] = [];
-
-    typedPatients.forEach(patient => {
-      if (patient.historyRecords) {
-        patient.historyRecords.forEach(record => {
-          const visitDate = new Date(record.visitDate);
-          if (visitDate >= startOfWeek && visitDate <= endOfWeek) {
-            weeklyRecords.push({
-              ...record,
-              patientName: patient.name,
-              patientLineId: patient.lineId,
-              patientId: patient._id?.toString()
-            });
-          }
-        });
-      }
-    });
-
-    // Sort records by visit date (most recent first)
-    weeklyRecords.sort((a, b) => 
-      new Date(b.visitDate).getTime() - new Date(a.visitDate).getTime()
-    );
 
     return NextResponse.json({
-      records: weeklyRecords,
-      count: weeklyRecords.length,
+      records: typedPatients,
+      count: typedPatients.length,
       weekRange: {
         start: startOfWeek.toISOString(),
         end: endOfWeek.toISOString()

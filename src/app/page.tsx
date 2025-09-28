@@ -171,34 +171,24 @@ export default function Home() {
         </div>
       )}
 
-      <div className="results-container">
-        <div className="results-header">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="section-container">
+        <div className="section-header">
+          <div className="row" style={{ justifyContent: 'space-between' }}>
             <h2>
               {loading ? '搜尋中...' : `找到 ${users.length} 位患者`}
             </h2>
-            <div className="header-buttons">
+            <div className="row">
               {selectedPatients.size > 0 && (
                 <button
                   onClick={() => setShowModal(true)}
-                  className="notification-button"
                   disabled={loading}
                 >
-                  發送播客 ({selectedPatients.size} 已選擇)
+                  發送衛教影音 ({selectedPatients.size} 已選擇)
                 </button>
               )}
               <button
                 onClick={seedDatabase}
                 disabled={loading}
-                style={{
-                  padding: '8px 16px',
-                  background: '#28a745',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  fontSize: '14px'
-                }}
               >
                 建立測試資料
               </button>
@@ -220,15 +210,15 @@ export default function Home() {
 
         {!loading && users.length > 0 && (
           <div>
-            <div className="selection-controls">
-              <label className="select-all-checkbox">
+            <div>
+                <label className="row">
                 <input
                   type="checkbox"
                   checked={selectedPatients.size === users.filter(u => u.lineId).length && users.filter(u => u.lineId).length > 0}
                   onChange={(e) => handleSelectAll(e.target.checked)}
                 />
-                全選有 LINE ID 的患者 ({users.filter(u => u.lineId).length} 位可用)
-              </label>
+                <span>全選有 LINE ID 的患者 ({users.filter(u => u.lineId).length} 位可用)</span>
+                </label>
             </div>
             {users.map((user) => (
               <UserCard 
@@ -246,7 +236,7 @@ export default function Home() {
           <div className="modal-overlay" onClick={() => setShowModal(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
-                <h2>發送播客通知</h2>
+                <h2>發送衛教影音通知</h2>
                 <button 
                   className="modal-close"
                   onClick={() => setShowModal(false)}
@@ -256,80 +246,79 @@ export default function Home() {
               </div>
               
               <div className="modal-body">
-                <div className="selected-patients">
-                  <h3>已選擇患者 ({selectedUsersWithLine.length})：</h3>
-                  <div className="patient-list">
-                    {selectedUsersWithLine.map(user => (
-                      <div key={user._id} className="selected-patient">
-                        <span className="patient-name">{user.name}</span>
-                        <span className="patient-line">LINE: {user.lineId}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="podcastUrl">播客網址：</label>
-                  <input
-                    id="podcastUrl"
-                    type="url"
-                    value={podcastUrl}
-                    onChange={(e) => handleUrlChange(e.target.value)}
-                    placeholder="https://example.com/podcast-episode"
-                    className="form-input"
-                    disabled={sending}
-                  />
-                  
-                  {loadingPreview && (
-                    <div className="link-preview loading">
-                      <div className="preview-loading">載入預覽中...</div>
+                <div className='form'>
+                  <div className="form-group">
+                    <label>已選擇患者 ({selectedUsersWithLine.length})：</label>
+                    <div className="list">
+                      {selectedUsersWithLine.map(user => (
+                        <div key={user._id} className="row">
+                          <span className="patient-name">{user.name}</span>
+                          {/* <span className="patient-line">LINE: {user.lineId}</span> */}
+                        </div>
+                      ))}
                     </div>
-                  )}
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="podcastUrl">影音網址：</label>
+                    <input
+                      id="podcastUrl"
+                      type="url"
+                      value={podcastUrl}
+                      onChange={(e) => handleUrlChange(e.target.value)}
+                      placeholder="https://example.com/podcast-episode"
+                      className="form-input"
+                      disabled={sending}
+                    />
+                    
+                    {loadingPreview && (
+                      <div className="link-preview loading">
+                        <div className="preview-loading">載入預覽中...</div>
+                      </div>
+                    )}
 
-                  {linkPreview && !loadingPreview && (
-                    <div className="link-preview">
-                      <div className="preview-content">
-                        {linkPreview.image && (
-                          <div className="preview-image">
-                            <img 
-                              src={linkPreview.image} 
-                              alt={linkPreview.title}
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                              }}
-                            />
-                          </div>
-                        )}
-                        <div className="preview-text">
-                          <div className="preview-title">{linkPreview.title}</div>
-                          {linkPreview.description && (
-                            <div className="preview-description">{linkPreview.description}</div>
+                    {linkPreview && !loadingPreview && (
+                      <div className="link-preview">
+                        <div className="preview-content">
+                          {linkPreview.image && (
+                            <div className="preview-image">
+                              <img 
+                                src={linkPreview.image} 
+                                alt={linkPreview.title}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                              />
+                            </div>
                           )}
-                          <div className="preview-domain">{linkPreview.domain}</div>
+                          <div className="preview-text">
+                            <div className="preview-title">{linkPreview.title}</div>
+                            {linkPreview.description && (
+                              <div className="preview-description">{linkPreview.description}</div>
+                            )}
+                            <div className="preview-domain">{linkPreview.domain}</div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="button-info"
+                    disabled={sending}
+                  >
+                    取消
+                  </button>
+                  <button
+                    onClick={handleSendNotifications}
+                    disabled={sending || !podcastUrl.trim()}
+                  >
+                    {sending ? '發送中...' : `發送給 ${selectedUsersWithLine.length} 位患者`}
+                  </button>
                 </div>
               </div>
-
-              <div className="modal-footer">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="cancel-button"
-                  disabled={sending}
-                >
-                  取消
-                </button>
-                <button
-                  onClick={handleSendNotifications}
-                  className="send-button"
-                  disabled={sending || !podcastUrl.trim()}
-                >
-                  {sending ? '發送中...' : `發送給 ${selectedUsersWithLine.length} 位患者`}
-                </button>
-              </div>
-            </div>
+            </div>   
           </div>
         )}
       </div>

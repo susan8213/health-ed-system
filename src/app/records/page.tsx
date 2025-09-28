@@ -7,6 +7,7 @@ import StatisticGroup from '@/components/StatisticGroup';
 import StatisticCard from '@/components/StatisticCard';
 import CollapsibleSection from '@/components/CollapsibleSection';
 import { generateWordCloudData, generateMockWordCloudData, WordCloudItem } from '@/utils/wordcloud';
+import UserCard from '@/components/UserCard';
 
 interface RecordWithPatient extends TCMHistoryRecord {
   patientName: string;
@@ -15,7 +16,7 @@ interface RecordWithPatient extends TCMHistoryRecord {
 }
 
 export default function WeeklyRecords() {
-  const [records, setRecords] = useState<RecordWithPatient[]>([]);
+  const [records, setRecords] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [wordCloudData, setWordCloudData] = useState<WordCloudItem[]>([]);
@@ -38,7 +39,7 @@ export default function WeeklyRecords() {
       
       // 生成文字雲數據
       // setWordCloudData(generateMockWordCloudData());
-      const cloudData = generateWordCloudData(data.records);
+      const cloudData = generateWordCloudData(data.records.map((record: Patient) => record.historyRecords).flat());
       setWordCloudData(cloudData);
       
     } catch (err) {
@@ -80,7 +81,7 @@ export default function WeeklyRecords() {
     return (
       <div className="container">
         <div className="error">錯誤: {error}</div>
-        <a href="/" className="search-button">返回患者搜尋</a>
+        <a href="/" className="button button-info">返回患者搜尋</a>
       </div>
     );
   }
@@ -93,11 +94,6 @@ export default function WeeklyRecords() {
           <p className="week-range">
             {weekRange.start} - {weekRange.end}
           </p>
-          <div className="header-actions">
-            <a href="/" className="back-button">
-              返回患者搜尋
-            </a>
-          </div>
         </div>
 
 
@@ -126,72 +122,12 @@ export default function WeeklyRecords() {
               本週沒有找到問診記錄。
             </div>
           ) : (
-            <div className="records-list">
-              <div className="records-count">
+            <div className="section-container">
+              <div className="section-header">
                 本週找到 {records.length} 筆記錄
               </div>
               {records.map((record, index) => (
-                <div key={`${record.patientId}-${record.visitDate}-${index}`} className="record-card">
-                  <div className="record-header">
-                    <div className="patient-info">
-                      <h3>{record.patientName}</h3>
-                      {record.patientLineId && (
-                        <span className="line-id">LINE: {record.patientLineId}</span>
-                      )}
-                    </div>
-                    <div className="visit-info">
-                      <span className="visit-date">
-                        {new Date(record.visitDate).toLocaleDateString()}
-                      </span>
-                      <span className="visit-time">
-                        {new Date(record.visitDate).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="record-content">
-                    {record.symptoms.length > 0 && (
-                      <div className="record-section">
-                        <strong>症狀：</strong>
-                        <div className="symptoms-list">
-                          {record.symptoms.map((symptom, idx) => (
-                            <span key={idx} className="symptom-tag">
-                              {symptom}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {record.syndromes.length > 0 && (
-                      <div className="record-section">
-                        <strong>中醫證候：</strong>
-                        <div className="syndromes-list">
-                          {record.syndromes.map((syndrome, idx) => (
-                            <span key={idx} className="syndrome-tag">
-                              {syndrome}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {record.notes && (
-                      <div className="record-section">
-                        <strong>診療備註：</strong>
-                        <p className="notes-text">{record.notes}</p>
-                      </div>
-                    )}
-                  </div>
-                  <div className="record-actions">
-                    <a 
-                      href={`/edit/${record.patientId}`}
-                      className="edit-button-small"
-                    >
-                      編輯記錄
-                    </a>
-                  </div>
-                </div>
+                <UserCard key={record._id} user={record} editMode={true} />
               ))}
             </div>
           )}

@@ -26,7 +26,6 @@ export default function SignInPage() {
       <p>請先登入以存取系統</p>
       <button 
         onClick={handleSignIn}
-        className="auth-btn"
         style={{
           display: 'flex',
           alignItems: 'center',

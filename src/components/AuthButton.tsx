@@ -15,7 +15,7 @@ export default function AuthButton() {
           <img src={session.user.image} alt="avatar" className="auth-avatar" />
         )}
         <span className="auth-user-name">{session.user?.name || session.user?.email}</span>
-        <button className="auth-btn" onClick={() => signOut()}>
+        <button onClick={() => signOut()}>
           登出
         </button>
       </div>

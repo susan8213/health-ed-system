@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { api } from '@/lib/api-client';
 import { useRouter, useParams } from 'next/navigation';
 import { Patient, TCMHistoryRecord } from '@/types/user';
+import Card from '@/components/Card';
 
 export default function PatientRecords() {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function PatientRecords() {
     return (
       <div className="container">
         <div className="error">錯誤：{error || '找不到患者'}</div>
-        <button onClick={handleBack} className="search-button">
+        <button onClick={handleBack} className="button button-info">
           返回患者搜尋
         </button>
       </div>
@@ -63,17 +64,17 @@ export default function PatientRecords() {
 
   return (
     <div className="container">
-      <div className="records-container">
-        <div className="records-header">
-          <h1>{patient.name} - 病歷記錄</h1>
-          {patient.lineId && (
-            <p className="patient-line-id">LINE ID: {patient.lineId}</p>
-          )}
-          <div className="header-actions">
-            <button onClick={handleBack} className="back-button">
-              返回患者搜尋
-            </button>
-          </div>
+      <div className="section-container">
+        <div className="section-header">
+          <div className="row" style={{ justifyContent: 'space-between' }}>
+            <h1>{patient.name} - 病歷記錄</h1>
+            <div className="section-actions">
+              <button onClick={handleBack} className="button button-info">
+                返回患者搜尋
+              </button>
+            </div>
+          </div>            
+          
         </div>
 
         {sortedRecords.length === 0 ? (
@@ -87,81 +88,72 @@ export default function PatientRecords() {
             </div>
             
             {sortedRecords.map((record, index) => (
-              <div key={`${record.visitDate}-${index}`} className="record-card">
-                <div className="record-header">
-                  <div className="visit-info">
-                    <span className="visit-date">
-                      {new Date(record.visitDate).toLocaleDateString()}
-                    </span>
-                    <span className="visit-time">
-                      {new Date(record.visitDate).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
-                  </div>
-                  <div className="record-status">
-                    {index === 0 && <span className="latest-badge">最新</span>}
-                  </div>
-                </div>
-
-                <div className="record-content">
-                  {record.symptoms.length > 0 && (
-                    <div className="record-section">
-                      <strong>症狀：</strong>
-                      <div className="symptoms-list">
-                        {record.symptoms.map((symptom, idx) => (
-                          <span key={idx} className="symptom-tag">
-                            {symptom}
-                          </span>
-                        ))}
-                      </div>
+              <Card key={`${record.visitDate}-${index}`}>
+                <Card.Header>
+                  <div>
+                    <label>問診日期：</label>
+                      <span>
+                        {new Date(record.visitDate).toLocaleDateString()}
+                      </span>
                     </div>
-                  )}
-
-                  {record.syndromes.length > 0 && (
-                    <div className="record-section">
-                      <strong>中醫證候：</strong>
-                      <div className="syndromes-list">
-                        {record.syndromes.map((syndrome, idx) => (
-                          <span key={idx} className="syndrome-tag">
-                            {syndrome}
-                          </span>
-                        ))}
-                      </div>
+                    <div className="record-status">
+                      {index === 0 && <span className="latest-badge">最新</span>}
                     </div>
-                  )}
-
-                  {record.notes && (
-                    <div className="record-section">
-                      <strong>診療備註：</strong>
-                      <p className="notes-text">{record.notes}</p>
-                    </div>
-                  )}
-
-                  <div className="record-meta">
-                    <small className="created-date">
-                      建立時間：{new Date(record.createdAt).toLocaleString()}
+                  </Card.Header>
+                <Card.Content>
+                  <div>
+                    <label>更新時間：</label>
+                    <small>
+                      {new Date(record.updatedAt || record.createdAt).toLocaleString()}
                     </small>
-                    {record.updatedAt && new Date(record.updatedAt).getTime() !== new Date(record.createdAt).getTime() && (
-                      <small className="updated-date">
-                        更新時間：{new Date(record.updatedAt).toLocaleString()}
-                      </small>
+                  </div>
+                  {record.symptoms.length > 0 && (
+                      <div>
+                        <label>近期症狀：</label>
+                        
+                        <div className="keyword-list">
+                          {record.symptoms.slice(0, 8).map((symptom, index) => (
+                            <span key={index} className="keyword-tag">
+                              {symptom}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     )}
-                  </div>
-                </div>
 
-                {index === 0 && (
-                  <div className="record-actions">
-                    <a 
-                      href={`/edit/${patient._id}`}
-                      className="edit-button-small"
-                    >
-                      編輯最新記錄
-                    </a>
-                  </div>
-                )}
-              </div>
+                    {record.syndromes.length > 0 && (
+                      <div>
+                        <label>近期證候：</label>
+                        <div className="keyword-list">
+                          {record.syndromes.slice(0, 8).map((syndrome, index) => (
+                            <span key={index} className="keyword-tag">
+                              {syndrome}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {record.notes && (
+                      <div>
+                        <label>診療備註：</label>
+                        <p>{record.notes}</p>
+                      </div>
+                    )}
+                  </Card.Content>
+                  <Card.Footer>
+                      {index === 0 && (
+                        <div>
+                          <a
+                            href={`/edit/${patient._id}`}
+                            className="button"
+                          >
+                            編輯最新記錄
+                          </a>
+                        </div>
+                      )}
+                  </Card.Footer>
+              </Card>
             ))}
           </div>
         )}

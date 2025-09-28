@@ -98,7 +98,7 @@ export default function EditPatientRecord() {
     return (
       <div className="container">
         <div className="error">錯誤: {error}</div>
-        <button onClick={handleCancel} className="search-button">
+        <button onClick={handleCancel} className="button button-info">
           返回首頁
         </button>
       </div>
@@ -109,7 +109,7 @@ export default function EditPatientRecord() {
     return (
       <div className="container">
         <div className="no-results">找不到患者或病歷記錄</div>
-        <button onClick={handleCancel} className="search-button">
+        <button onClick={handleCancel} className="button button-info">
           返回首頁
         </button>
       </div>
@@ -118,11 +118,11 @@ export default function EditPatientRecord() {
 
   return (
     <div className="container">
-      <div className="edit-container">
-        <div className="edit-header">
+      <div className="section-container">
+        <div className="section-header">
           <h1>編輯病歷記錄</h1>
-          <div className="patient-info">
-            <h2>{patient.name}</h2>
+          <div>
+            <h2 className='text-color-primary'>{patient.name}</h2>
             {patient.lineId && <p>LINE ID: {patient.lineId}</p>}
             <p>就診日期: {new Date(latestRecord.visitDate).toLocaleDateString('zh-TW')}</p>
           </div>
@@ -134,7 +134,7 @@ export default function EditPatientRecord() {
           </div>
         )}
 
-        <form onSubmit={handleSave} className="edit-form">
+        <form onSubmit={handleSave} className="form">
           <div className="form-group">
             <label htmlFor="symptoms">症狀 (以逗號分隔):</label>
             <textarea
@@ -142,7 +142,6 @@ export default function EditPatientRecord() {
               value={symptoms}
               onChange={(e) => setSymptoms(e.target.value)}
               placeholder="例如: 頭痛, 失眠, 眩暈, 煩躁"
-              className="form-textarea"
               rows={3}
             />
           </div>
@@ -154,7 +153,6 @@ export default function EditPatientRecord() {
               value={syndromes}
               onChange={(e) => setSyndromes(e.target.value)}
               placeholder="例如: 肝火上炎, 心火擾神"
-              className="form-textarea"
               rows={2}
             />
           </div>
@@ -166,7 +164,6 @@ export default function EditPatientRecord() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="醫師備註..."
-              className="form-textarea"
               rows={4}
             />
           </div>
@@ -175,7 +172,6 @@ export default function EditPatientRecord() {
             <button
               type="submit"
               disabled={saving}
-              className="save-button"
             >
               {saving ? '儲存中...' : '儲存'}
             </button>
@@ -184,7 +180,7 @@ export default function EditPatientRecord() {
               type="button"
               onClick={handleCancel}
               disabled={saving}
-              className="cancel-button"
+              className="button button-info"
             >
               取消
             </button>

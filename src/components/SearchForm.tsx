@@ -34,59 +34,60 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
   };
 
   return (
-    <div className="search-container">
+    <div className="section-container">
       <h1 style={{ marginBottom: '20px', fontSize: '28px', fontWeight: '600' }}>
         智慧醫療管理系統 - 患者搜尋
       </h1>
       <SearchHelp />
-      <form onSubmit={handleSubmit} className="search-form">
-        <div className="search-row">
-          <input
-            type="text"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="按姓名或 LINE ID 搜尋（使用空格分隔多個關鍵字）..."
-            className="search-input"
-          />
-        </div>
-        
-        <div className="search-row">
-          <input
-            type="text"
-            value={symptoms}
-            onChange={(e) => setSymptoms(e.target.value)}
-            placeholder="按症狀篩選（例如：頭痛 疲勞 或 頭痛, 疲勞）..."
-            className="search-input"
-          />
-          
-          <input
-            type="text"
-            value={conditions}
-            onChange={(e) => setConditions(e.target.value)}
-            placeholder="按中醫證候篩選（例如：肝火旺盛 或 肝火旺盛, 腎陽虛）..."
-            className="search-input"
-          />
+      <form onSubmit={handleSubmit} className="form">
+        <div className="row">
+          <div className="column form-group">
+            <label htmlFor="keyword">搜尋患者 (姓名或 LINE ID):</label>
+            <input
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="按姓名或 LINE ID 搜尋（使用空格分隔多個關鍵字）..."
+              className="search-input"
+            />
+          </div>
+          <div className="column form-group">
+            <label htmlFor="symptoms">症狀篩選:</label>
+            <input
+              type="text"
+              value={symptoms}
+              onChange={(e) => setSymptoms(e.target.value)}
+              placeholder="按症狀篩選（例如：頭痛 疲勞 或 頭痛, 疲勞）..."
+              className="search-input"
+            />
+          </div>
+          <div className="column form-group">
+            <label htmlFor="conditions">中醫證候篩選:</label>
+            <input
+              type="text"
+              value={conditions}
+              onChange={(e) => setConditions(e.target.value)}
+              placeholder="按中醫證候篩選（例如：肝火旺盛 或 肝火旺盛, 腎陽虛）..."
+              className="search-input"
+            />
+          </div>
         </div>
 
-        <div className="search-row">
-          <div className="search-buttons">
+        <div className="row" style={{ justifyContent: 'flex-end'}}>
             <button
               type="submit"
               disabled={loading}
-              className="search-button"
             >
               {loading ? '搜尋中...' : '搜尋患者'}
             </button>
-            
             <button
               type="button"
               onClick={handleClear}
               disabled={loading}
-              className="clear-button"
+              className="button-info"
             >
               清除
             </button>
-          </div>
         </div>
       </form>
     </div>
