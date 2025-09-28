@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import AuthButton from './AuthButton';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -27,6 +28,9 @@ export default function Navbar() {
           >
             本週記錄
           </a>
+        </div>
+        <div style={{ marginLeft: 'auto' }}>
+          <AuthButton />
         </div>
       </div>
     </nav>

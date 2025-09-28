@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { api } from '@/lib/api-client';
 import { useRouter, useParams } from 'next/navigation';
 import { Patient, TCMHistoryRecord } from '@/types/user';
 
@@ -29,13 +30,7 @@ export default function EditPatientRecord() {
   const fetchPatient = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/users/${patientId}`);
-      
-      if (!response.ok) {
-        throw new Error('獲取患者資料失敗');
-      }
-
-      const data = await response.json();
+      const data = await api.get(`/api/users/${patientId}`);
       setPatient(data.patient);
 
       // Get the latest record
@@ -77,18 +72,7 @@ export default function EditPatientRecord() {
         updatedAt: new Date()
       };
 
-      const response = await fetch(`/api/users/${patientId}/record`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedRecord),
-      });
-
-      if (!response.ok) {
-        throw new Error('更新記錄失敗');
-      }
-
+      await api.put(`/api/users/${patientId}/record`, updatedRecord);
       alert('病歷記錄更新成功！');
       router.push('/');
     } catch (err) {

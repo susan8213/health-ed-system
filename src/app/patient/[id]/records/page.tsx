@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { api } from '@/lib/api-client';
 import { useRouter, useParams } from 'next/navigation';
 import { Patient, TCMHistoryRecord } from '@/types/user';
 
@@ -22,13 +23,7 @@ export default function PatientRecords() {
   const fetchPatient = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/users/${patientId}`);
-      
-      if (!response.ok) {
-        throw new Error('獲取患者資料失敗');
-      }
-
-      const data = await response.json();
+      const data = await api.get(`/api/users/${patientId}`);
       setPatient(data.patient);
     } catch (err) {
       setError(err instanceof Error ? err.message : '發生錯誤');

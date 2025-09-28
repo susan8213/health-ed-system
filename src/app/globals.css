@@ -1456,3 +1456,41 @@ body {
     font-size: 1.5rem;
   }
 }
+
+/* AuthButton Styles */
+.auth-btn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 22px;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: background-color 0.2s;
+  margin-left: 12px;
+  display: inline-block;
+}
+.auth-btn:hover {
+  background: #4d8fd1;
+}
+.auth-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  object-fit: cover;
+}
+.auth-user-name {
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  margin-left: 4px;
+}
+.auth-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

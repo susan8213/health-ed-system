@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { api } from '@/lib/api-client';
 import SearchForm from '@/components/SearchForm';
 import UserCard from '@/components/UserCard';
 import { Patient } from '@/types/user';
@@ -43,13 +44,7 @@ export default function Home() {
         params.append('conditions', filters.conditions);
       }
 
-      const response = await fetch(`/api/users?${params.toString()}`);
-      
-      if (!response.ok) {
-        throw new Error('搜尋患者失敗');
-      }
-
-      const data = await response.json();
+      const data = await api.get(`/api/users?${params.toString()}`);
       setUsers(data.users);
     } catch (err) {
       setError(err instanceof Error ? err.message : '發生錯誤');
@@ -94,23 +89,11 @@ export default function Home() {
       const selectedUsers = users.filter(user => selectedPatients.has(user._id!));
       const lineIds = selectedUsers.map(user => user.lineId).filter(Boolean);
 
-      const response = await fetch('/api/notifications/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          lineIds,
-          podcastUrl: podcastUrl.trim(),
-          patients: selectedUsers.map(user => ({ name: user.name, lineId: user.lineId }))
-        }),
+      const result = await api.post('/api/notifications/send', {
+        lineIds,
+        podcastUrl: podcastUrl.trim(),
+        patients: selectedUsers.map(user => ({ name: user.name, lineId: user.lineId }))
       });
-
-      if (!response.ok) {
-        throw new Error('發送通知失敗');
-      }
-
-      const result = await response.json();
       alert(`通知已成功發送給 ${result.sentCount} 位患者！`);
       setShowModal(false);
       setPodcastUrl('');
@@ -126,14 +109,7 @@ export default function Home() {
   const seedDatabase = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/users/seed', {
-        method: 'POST',
-      });
-
-      if (!response.ok) {
-        throw new Error('資料庫初始化失敗');
-      }
-
+      await api.post('/api/users/seed');
       // Refresh the patient list after seeding
       await handleSearch({});
       alert('資料庫初始化成功！');
@@ -144,9 +120,9 @@ export default function Home() {
     }
   };
 
-  const selectedUsersWithLine = users.filter(user => 
+  const selectedUsersWithLine = useMemo(() => users.filter(user => 
     selectedPatients.has(user._id!) && user.lineId
-  );
+  ), [users, selectedPatients]);
 
   const fetchLinkPreview = async (url: string) => {
     if (!url.trim()) {
@@ -163,22 +139,10 @@ export default function Home() {
 
     setLoadingPreview(true);
     try {
-      const response = await fetch('/api/link-preview', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url }),
-      });
-
-      if (response.ok) {
-        const preview = await response.json();
-        setLinkPreview(preview);
-      } else {
-        setLinkPreview(null);
-      }
+      const preview = await api.post('/api/link-preview', { url });
+      setLinkPreview(preview);
     } catch (error) {
-      console.error('Error fetching link preview:', error);
+      console.error('擷取連結預覽失敗:', error);
       setLinkPreview(null);
     } finally {
       setLoadingPreview(false);
