@@ -70,6 +70,7 @@ export async function PUT(
     // 清除相關的快取
     revalidatePath('/api/users');
     revalidatePath(`/api/users/${id}`);
+    revalidatePath('/api/records/weekly');
     // revalidatePath('/'); // CSR 頁面不需要
     // revalidatePath('/records'); // 如果也是 CSR 就不需要
 

@@ -43,7 +43,7 @@ export default function UserCard({ user: patient, editMode, isSelected, onSelect
             <span>{new Date(recentRecord.visitDate).toLocaleDateString()}</span>
           </p>
         )}
-        {patient.historyRecords && patient.historyRecords.length > 0 && (
+        {patient.historyRecords && patient.historyRecords.length > 0 && !editMode && (
           <p>
             <label>總就診次數：</label> 
             <span>{patient.historyRecords.length}</span>

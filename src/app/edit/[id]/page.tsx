@@ -74,7 +74,7 @@ export default function EditPatientRecord() {
 
       await api.put(`/api/users/${patientId}/record`, updatedRecord);
       alert('病歷記錄更新成功！');
-      router.push('/');
+      router.back();
     } catch (err) {
       setError(err instanceof Error ? err.message : '儲存失敗');
     } finally {
@@ -83,7 +83,7 @@ export default function EditPatientRecord() {
   };
 
   const handleCancel = () => {
-    router.push('/');
+    router.back();
   };
 
   if (loading) {
