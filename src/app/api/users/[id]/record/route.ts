@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
 import { Patient, TCMHistoryRecord } from '@/types/user';
 import { ObjectId } from 'mongodb';
+import { revalidatePath } from 'next/cache';
 
 export async function PUT(
   request: NextRequest,
@@ -65,6 +66,12 @@ export async function PUT(
         { status: 404 }
       );
     }
+
+    // 清除相關的快取
+    revalidatePath('/api/users');
+    revalidatePath(`/api/users/${id}`);
+    // revalidatePath('/'); // CSR 頁面不需要
+    // revalidatePath('/records'); // 如果也是 CSR 就不需要
 
     return NextResponse.json({
       message: 'Record updated successfully',

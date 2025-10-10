@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
 import { Patient } from '@/types/user';
 
+export const revalidate = 86400; // 24 小時
 export async function GET() {
   try {
     const db = await getDatabase();
@@ -41,7 +42,7 @@ export async function GET() {
     )
     .sort({ 'historyRecords.visitDate': -1 }) // Sort by most recent visitDate first
     .toArray();
-    console.log('Patients with records this week:', patients);
+    console.log(`Patients with records this week (${startOfWeek.toISOString()} - ${endOfWeek.toISOString()}):`, patients);
 
     const typedPatients = patients as unknown as Patient[];
 
