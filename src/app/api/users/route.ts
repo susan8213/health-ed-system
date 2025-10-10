@@ -18,22 +18,16 @@ export async function GET(request: NextRequest) {
     let query: any = {};
 
     if (keyword) {
-      // Split keywords by space and create search conditions
+      // Split keywords by space and create OR search conditions
       const keywords = keyword.trim().split(/\s+/).filter(k => k.length > 0);
       
       if (keywords.length === 1) {
         // Single keyword search
-        query.$or = [
-          { name: { $regex: keywords[0], $options: 'i' } },
-          { lineId: { $regex: keywords[0], $options: 'i' } }
-        ];
+        query.name = { $regex: keywords[0], $options: 'i' };
       } else {
-        // Multiple keywords search - all keywords must match in any field
-        query.$and = keywords.map(kw => ({
-          $or: [
-            { name: { $regex: kw, $options: 'i' } },
-            { lineId: { $regex: kw, $options: 'i' } }
-          ]
+        // Multiple keywords search - OR logic (A OR B OR C)
+        query.$or = keywords.map(kw => ({
+          name: { $regex: kw, $options: 'i' }
         }));
       }
     }

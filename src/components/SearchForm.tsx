@@ -42,12 +42,12 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
       <form onSubmit={handleSubmit} className="form">
         <div className="row">
           <div className="column form-group">
-            <label htmlFor="keyword">搜尋患者 (姓名或 LINE ID):</label>
+            <label htmlFor="keyword">搜尋患者:</label>
             <input
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
-              placeholder="按姓名或 LINE ID 搜尋（使用空格分隔多個關鍵字）..."
+              placeholder="按患者姓名搜尋（使用空格分隔多個關鍵字）..."
               className="search-input"
             />
           </div>
@@ -57,7 +57,7 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
               type="text"
               value={symptoms}
               onChange={(e) => setSymptoms(e.target.value)}
-              placeholder="按症狀篩選（例如：頭痛 疲勞 或 頭痛, 疲勞）..."
+              placeholder="按症狀篩選（例如：頭痛 疲勞）..."
               className="search-input"
             />
           </div>
@@ -67,7 +67,7 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
               type="text"
               value={conditions}
               onChange={(e) => setConditions(e.target.value)}
-              placeholder="按中醫證候篩選（例如：肝火旺盛 或 肝火旺盛, 腎陽虛）..."
+              placeholder="按中醫證候篩選（例如：肝火旺盛）..."
               className="search-input"
             />
           </div>
