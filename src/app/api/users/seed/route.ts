@@ -5,7 +5,6 @@ import { Patient } from '@/types/user';
 const samplePatients: Omit<Patient, '_id'>[] = [
   {
     name: '陳偉明',
-    lineId: 'chenwei123',
     historyRecords: [
       {
         visitDate: new Date('2025-08-15'),
@@ -29,7 +28,6 @@ const samplePatients: Omit<Patient, '_id'>[] = [
   },
   {
     name: '王麗華',
-    lineId: 'wanglihua456',
     historyRecords: [
       {
         visitDate: new Date('2025-08-12'),
@@ -53,7 +51,6 @@ const samplePatients: Omit<Patient, '_id'>[] = [
   },
   {
     name: '林小玉',
-    lineId: 'linxiaoyu789',
     historyRecords: [
       {
         visitDate: new Date('2024-01-20'),
@@ -69,7 +66,6 @@ const samplePatients: Omit<Patient, '_id'>[] = [
   },
   {
     name: '張美玲',
-    lineId: 'zhangmeiling321',
     historyRecords: [
       {
         visitDate: new Date('2024-02-05'),
@@ -93,7 +89,6 @@ const samplePatients: Omit<Patient, '_id'>[] = [
   },
   {
     name: '劉建國',
-    lineId: 'liujianguo654',
     historyRecords: [
       {
         visitDate: new Date('2024-01-25'),
@@ -109,7 +104,6 @@ const samplePatients: Omit<Patient, '_id'>[] = [
   },
   {
     name: '黃小芳',
-    lineId: 'huangxiaofang987',
     historyRecords: [
       {
         visitDate: new Date('2024-02-01'),

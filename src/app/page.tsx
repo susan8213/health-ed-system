@@ -17,6 +17,8 @@ export default function Home() {
   const [sending, setSending] = useState(false);
   const [linkPreview, setLinkPreview] = useState<any>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<any>(null);
 
   // Load all patients on initial page load
   useEffect(() => {
@@ -66,7 +68,7 @@ export default function Home() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      const allIds = users.filter(user => user.lineId).map(user => user._id!);
+      const allIds = users.filter(user => user.lineUserId).map(user => user._id!);
       setSelectedPatients(new Set(allIds));
     } else {
       setSelectedPatients(new Set());
@@ -75,7 +77,7 @@ export default function Home() {
 
   const handleSendNotifications = async () => {
     if (!podcastUrl.trim()) {
-      alert('請輸入播客網址');
+      alert('請輸入衛教影音網址');
       return;
     }
 
@@ -87,12 +89,12 @@ export default function Home() {
     setSending(true);
     try {
       const selectedUsers = users.filter(user => selectedPatients.has(user._id!));
-      const lineIds = selectedUsers.map(user => user.lineId).filter(Boolean);
+      const lineUserIds = selectedUsers.map(user => user.lineUserId).filter(Boolean);
 
       const result = await api.post('/api/notifications/send', {
-        lineIds,
+        lineUserIds,
         podcastUrl: podcastUrl.trim(),
-        patients: selectedUsers.map(user => ({ name: user.name, lineId: user.lineId }))
+        patients: selectedUsers.map(user => ({ name: user.name, lineUserId: user.lineUserId }))
       });
       alert(`通知已成功發送給 ${result.sentCount} 位患者！`);
       setShowModal(false);
@@ -120,8 +122,30 @@ export default function Home() {
     }
   };
 
+  const syncLineUsers = async () => {
+    setSyncing(true);
+    setSyncResult(null);
+    try {
+      const result = await api.post('/api/sync/line-users');
+      setSyncResult(result);
+      
+      // 顯示同步結果
+      if (result.success) {
+        alert(`LINE推播帳號同步完成！\n總用戶數: ${result.stats.total}\n成功同步: ${result.stats.synced}\n已跳過（已可推播）: ${result.stats.alreadySynced || 0}\n無法匹配: ${result.stats.noMatch}\n失敗: ${result.stats.errors}`);
+        // 重新載入患者列表以顯示更新的推播狀態
+        await handleSearch({});
+      } else {
+        alert('同步失敗：' + result.details);
+      }
+    } catch (err) {
+      alert('同步失敗：' + (err instanceof Error ? err.message : '未知錯誤'));
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   const selectedUsersWithLine = useMemo(() => users.filter(user => 
-    selectedPatients.has(user._id!) && user.lineId
+    selectedPatients.has(user._id!) && user.lineUserId
   ), [users, selectedPatients]);
 
   const fetchLinkPreview = async (url: string) => {
@@ -187,6 +211,13 @@ export default function Home() {
                 </button>
               )}
               <button
+                onClick={syncLineUsers}
+                disabled={loading || syncing}
+                style={{ marginRight: '8px' }}
+              >
+                {syncing ? '同步中...' : '同步LINE推播帳號'}
+              </button>
+              <button
                 onClick={seedDatabase}
                 disabled={loading}
               >
@@ -214,10 +245,10 @@ export default function Home() {
                 <label className="row">
                 <input
                   type="checkbox"
-                  checked={selectedPatients.size === users.filter(u => u.lineId).length && users.filter(u => u.lineId).length > 0}
+                  checked={selectedPatients.size === users.filter(u => u.lineUserId).length && users.filter(u => u.lineUserId).length > 0}
                   onChange={(e) => handleSelectAll(e.target.checked)}
                 />
-                <span>全選有 LINE ID 的患者 ({users.filter(u => u.lineId).length} 位可用)</span>
+                <span>全選可接收影音推播的患者 ({users.filter(u => u.lineUserId).length} 位可推播)</span>
                 </label>
             </div>
             {users.map((user) => (

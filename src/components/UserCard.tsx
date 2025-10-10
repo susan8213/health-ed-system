@@ -21,7 +21,7 @@ export default function UserCard({ user: patient, editMode, isSelected, onSelect
   // header
   const header = (
       <>
-        {patient.lineId && onSelect && (
+        {patient.lineUserId && onSelect && (
           <input
             type="checkbox"
             checked={isSelected || false}

@@ -123,7 +123,7 @@ export default function EditPatientRecord() {
           <h1>編輯病歷記錄</h1>
           <div>
             <h2 className='text-color-primary'>{patient.name}</h2>
-            {patient.lineId && <p>LINE ID: {patient.lineId}</p>}
+            {patient.lineUserId && <p>可接收推播 ✓</p>}
             <p>就診日期: {new Date(latestRecord.visitDate).toLocaleDateString('zh-TW')}</p>
           </div>
         </div>

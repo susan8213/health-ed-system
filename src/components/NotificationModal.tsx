@@ -38,12 +38,11 @@ export default function NotificationModal({
         
         <div className="modal-body">
           <div className="selected-patients">
-            <h3>已選擇患者 ({selectedPatients.length})：</h3>
+            <h3>將推播給以下患者 ({selectedPatients.length} 位)：</h3>
             <div className="patient-list">
               {selectedPatients.map(user => (
                 <div key={user._id} className="selected-patient">
                   <span className="patient-name">{user.name}</span>
-                  <span className="patient-line">LINE: {user.lineId}</span>
                 </div>
               ))}
             </div>

@@ -3,7 +3,7 @@ export interface Patient {
   _id?: string;
   // Basic Information
   name: string;
-  lineId?: string; // LINE messaging app ID for communication
+  lineUserId?: string; // LINE messaging app User ID
   
   // Medical History Records
   historyRecords: TCMHistoryRecord[];
@@ -34,7 +34,7 @@ export interface TCMHistoryRecord {
 
 // Search and Filter Interfaces
 export interface PatientSearchFilters {
-  keyword?: string; // Search across name, LINE ID
+  keyword?: string; // Search across name only
   symptoms?: string[]; // Filter by symptoms
   syndromes?: string[]; // Filter by TCM syndromes
 }
