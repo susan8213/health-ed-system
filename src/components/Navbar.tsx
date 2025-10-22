@@ -44,6 +44,12 @@ export default function Navbar() {
           >
             本週記錄
           </a>
+          <a 
+            href="/import/line-csv" 
+            className={`nav-link ${pathname === '/import/line-csv' ? 'active' : ''}`}
+          >
+            CSV 匯入
+          </a>
         </div>
         <div className="nav-auth-desktop">
           <AuthButton />
@@ -65,6 +71,13 @@ export default function Navbar() {
               onClick={() => setMenuOpen(false)}
             >
               本週記錄
+            </a>
+            <a 
+              href="/import/line-csv" 
+              className={`nav-link ${pathname === '/import/line-csv' ? 'active' : ''}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              CSV 匯入
             </a>
             <div className="nav-auth-mobile">
               <AuthButton />

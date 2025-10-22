@@ -425,7 +425,14 @@ button.button-secondary,
     }
   }
 
-  input {
+  // 僅針對文字型輸入給通用樣式，避免 checkbox/date 被撐寬
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="url"],
+  input[type="tel"] {
     flex: 1;
     min-width: 300px;
     padding: 12px 16px;
@@ -435,14 +442,39 @@ button.button-secondary,
     transition: border-color 0.2s;
 
     &:focus {
-        outline: none;
-        border-color: $primary;
+      outline: none;
+      border-color: $primary;
     }
 
     &:disabled {
       background: $gray-100;
       color: $gray-500;
     }
+  }
+
+  // 日期輸入固定合理寬度，避免撐爆欄位
+  input[type="date"] {
+    width: 160px;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 2px solid $gray-200;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+    }
+  }
+
+  // 表單內的核取方塊不套用文字輸入的 min-width 等規則
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    min-width: 0;
+    padding: 0;
+    flex: 0 0 auto;
   }
 
 
