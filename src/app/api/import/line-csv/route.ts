@@ -263,12 +263,14 @@ export async function POST(req: NextRequest) {
     }
 
     const patient: Patient = {
-      name: patientName || 'Unknown',
-      lineUserId: lineUserIdParam,
+      name: patientName || '不明患者',
       historyRecords,
       createdAt: now,
       updatedAt: now,
     };
+    if (lineUserIdParam && lineUserIdParam.trim()) {
+      (patient as any).lineUserId = lineUserIdParam;
+    }
 
     let upsertResult: { upserted: boolean; patientId?: string } | undefined;
     if (upsert) {
