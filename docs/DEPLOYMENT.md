@@ -1,4 +1,6 @@
-# Deploy TCM Clinic to Render.com
+# 部署指南
+
+> 📌 **相關文檔：** [專案首頁](../README.md) | [作品集展示](./PORTFOLIO.md) | [Web App](./WEB_APP.md) | [LINE BOT](./LINEBOT.md) | [API 參考](./API.md)
 
 ## 🚀 Quick Deployment Guide
 
@@ -231,6 +233,28 @@ Render automatically monitors your app using `/api/health`:
 ## 🎉 Success Checklist
 
 - [ ] Repository connected to Render
+- [ ] MongoDB Atlas cluster created
+- [ ] Environment variables configured
+- [ ] Application deployed successfully
+- [ ] Database initialized
+- [ ] Health check endpoint responding
+- [ ] Sample data seeded
+- [ ] LINE integration tested (if applicable)
+
+## 🔗 相關資源
+
+- [專案總覽](../README.md)
+- [作品集展示](./PORTFOLIO.md)
+- [Web App 開發指南](./WEB_APP.md)
+- [LINE BOT 技術文檔](./LINEBOT.md)
+- [API 參考文檔](./API.md)
+
+---
+
+**Need Help?**
+- Render Documentation: https://render.com/docs
+- MongoDB Atlas: https://docs.atlas.mongodb.com
+- GitHub Issues: Open an issue in the repository
 - [ ] Environment variables configured
 - [ ] Database initialized with indexes
 - [ ] Health check endpoint responding

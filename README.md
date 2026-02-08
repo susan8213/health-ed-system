@@ -1,298 +1,216 @@
-# TCM Clinic Management System
+# 偏鄉智慧診療支援系統
+> LINE BOT 智能問診 + Web 管理系統的整合解決方案
 
-A modern Traditional Chinese Medicine clinic patient management system with LINE messaging integration, built with Next.js 14, TypeScript, and MongoDB.
+[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-7.0-green)](https://www.mongodb.com/)
+[![n8n](https://img.shields.io/badge/n8n-automation-orange)](https://n8n.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 
-## 🏥 Features
+## 🎯 專案簡介
 
-### Authentication & Security
-- **Google OAuth Integration**: Secure login with NextAuth.js and Google OAuth
-- **Session Management**: Persistent user sessions with automatic token refresh
-- **Role-based Access**: Secure access control for clinic staff
-- **Protected Routes**: Authenticated access to patient data and medical records
+這是一套為偏鄉醫療資源有限的小診所設計的智慧診療支援系統。醫師定期上山巡診，但面臨病患透過 LINE 問診時回覆耗時過長（平均 2.5 小時）、無法系統化管理患者症狀等挑戰。
 
-### Patient Management
-- **Simplified Patient Profiles**: Name and broadcast account management
-- **Medical Record Tracking**: Symptoms and TCM syndrome records
-- **Smart Search**: Flexible search for names, symptoms, and syndromes
-- **Batch Operations**: Select multiple patients for messaging
+本專案整合 **AI 自動問診**與**智慧患者管理**兩大核心功能：
+- 🤖 **LINE BOT 智能問診系統**：使用 n8n + Google Gemini 自動處理常見問題，回覆時間從 2.5 小時降至 < 1 分鐘
+- 💻 **智慧醫療管理 Web App**：Next.js 開發的患者症狀管理系統，支援精準篩選與衛教推播
 
-### TCM Professional Features
-- **Symptom Tracking**: Traditional Chinese Medicine symptom records
-- **Syndrome Records**: TCM pattern identification and treatment
-- **Visit History**: Time-series medical record tracking
-- **Clinical Notes**: Physician observations and diagnoses
+**核心成果：**
+- ⬇️ 平均回覆時間降低 99.3%（2.5 小時 → < 1 分鐘）
+- ⬇️ 醫師處理訊息量減少 70%
+- 📊 4 個月累積可分析的患者數據資產
 
-### Messaging & Communication
-- **LINE Integration**: Broadcast health education videos to patients
-- **Account Sync**: Automatic synchronization of LINE users with patient data
-- **Batch Messaging**: Send content to multiple patients at once
-- **Link Preview**: Automatic thumbnail and summary display for video content
+## 📚 文檔導航
 
-### Search System
-- **Name Search**: Multi-keyword OR logic search ("Wang Ming" finds patients containing either keyword)
-- **Symptom Search**: Find patients with specific symptoms
-- **Combined Search**: Cross-field AND logic (name + symptoms + syndromes)
-- **Search Help**: Built-in interactive search guidance
+### 🌟 作品集展示
+想快速了解專案價值、技術決策與實際成果？
 
-### User Interface
-- **Responsive Design**: Support for desktop, tablet, and mobile
-- **Chinese Support**: Full Unicode Chinese character support
-- **Intuitive Navigation**: Clean professional interface design
-- **Real-time Feedback**: Instant operation status and result display
+👉 **[完整專案介紹與技術亮點](./docs/PORTFOLIO.md)**
 
-## 🚀 Quick Start
+內容包含：
+- 專案背景與問題挑戰
+- 解決方案與技術架構
+- 功能展示與成果數據
+- 4 大核心技術細節（AI 設計、Transaction 控制、LINE API、訊息搜集）
+- 部署架構與未來優化方向
 
-### System Requirements
+### 🛠️ 技術文檔
+
+#### 📱 [LINE BOT 智能問診系統](./docs/LINEBOT.md)
+- n8n 工作流設計與運作原理
+- Google Gemini AI 整合方式
+- FAQ 知識庫管理（Google Sheets）
+- Transaction 併發控制機制
+- LINE Webhook 與 Reply API
+
+#### 💻 [Web 管理系統開發指南](./docs/WEB_APP.md)
+- Next.js 14 + TypeScript 架構
+- NextAuth.js Google OAuth 認證
+- MongoDB 資料模型設計
+- 患者搜尋與症狀管理功能
+- API 端點與使用方式
+
+#### 🚀 [部署指南](./docs/DEPLOYMENT.md)
+- Zeabur 全服務部署（正式環境）
+- Render.com + MongoDB Atlas 部署（作品集）
+- 環境變數配置說明
+- CI/CD 自動化流程
+
+#### 📡 [API 參考文檔](./docs/API.md)
+- 認證相關 API（NextAuth）
+- 患者管理 API（CRUD）
+- 醫療記錄 API（週報告）
+- 訊息推播 API（LINE Push）
+- LINE 用戶同步 API
+
+## ⚡ 快速開始
+
+### 系統需求
 - Node.js 18+
-- MongoDB Atlas account (free tier available)
-- Git version control
+- MongoDB 7.0+（建議使用 MongoDB Atlas）
+- LINE Official Account（需開啟 Messaging API）
+- Google OAuth 2.0 應用程式（Web App 認證用）
+- Google Gemini API Key（AI 分類用）
 
-### Local Development
+### 本地開發
+
 ```bash
-# Clone the repository
-git clone <your-repository-url>
+# 1. 複製專案
+git clone https://github.com/susan8213/health-ed-system.git
 cd health-ed-system
 
-# Install dependencies
+# 2. 安裝依賴
 npm install
 
-# Set up environment variables
+# 3. 設定環境變數
 cp .env.example .env.local
-# Edit .env.local to add your MongoDB connection string and LINE API Token
+# 編輯 .env.local，填入必要的金鑰和連接字串
 
-# Initialize database
+# 4. 初始化資料庫
 npm run setup-db
 
-# Start development server
+# 5. 啟動開發伺服器
 npm run dev
 ```
 
-Visit http://localhost:3000 to view the application.
+啟動後請訪問 http://localhost:3000
 
-### Cloud Deployment (Render.com)
-For detailed deployment instructions, see [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md).
+### 環境變數配置重點
 
-## 🔧 System Configuration
-
-### Environment Variables
-```bash
-# Required settings
+```env
+# MongoDB（必填）
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/tcm-clinic
 MONGODB_DB=tcm-clinic
-
-# LINE Bot database (optional, can be omitted if same as main database)
-LINEBOT_MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/linebot
 LINEBOT_MONGODB_DB=linebot
 
-# LINE Message API (required for messaging features)
-LINE_CHANNEL_ACCESS_TOKEN=your_line_token
+# LINE Messaging API（必填）
+LINE_CHANNEL_ACCESS_TOKEN=your_line_channel_access_token
+LINE_CHANNEL_SECRET=your_line_channel_secret
 
-# NextAuth Google OAuth (required for authentication)
+# NextAuth Google OAuth（必填）
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_nextauth_secret
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-# Optional settings
-NODE_ENV=production
-NEXT_TELEMETRY_DISABLED=1
+# Google Gemini API（必填）
+GEMINI_API_KEY=your_gemini_api_key
+
+# Google Sheets FAQ（可選）
+GOOGLE_SHEETS_ID=your_sheets_id
+GOOGLE_SERVICE_ACCOUNT_KEY=your_service_account_json
 ```
 
-### Database Configuration
-The system automatically creates optimized indexes:
-- Patient name search index
-- Medical record query index
-- Symptom and syndrome filtering index
-- Date sorting index
+詳細配置說明請參考 [部署指南](./docs/DEPLOYMENT.md)
 
-## 📱 User Guide
+## 🏗️ 技術架構概覽
 
-### Authentication
-- **Google Login**: Click "Sign in with Google" to authenticate
-- **Session Management**: Stay logged in across browser sessions
-- **Secure Logout**: Use the logout button to end your session safely
-- **Access Control**: Only authenticated users can access patient data
-
-### Patient Search
-- **Single keyword**: "Wang" - Find all patients with names containing "Wang"
-- **Multiple keywords**: "Wang Ming" - Find patients containing either "Wang" or "Ming"
-- **Symptom search**: "headache fatigue" - Find patients with either symptom
-- **Combined search**: Name + symptoms + syndromes, all conditions must match
-
-### Medical Record Management
-- **View patient records**: Click "View Medical Records" on patient cards
-- **Edit latest record**: Use the "Edit Latest Record" button
-- **Weekly overview**: "Weekly Records" in the navigation bar
-
-### LINE Messaging Features
-1. **Sync broadcast accounts**: Click "Sync Broadcast Accounts" button
-2. **Select patients**: Use checkboxes to select patients
-3. **Send content**: Click "Send Health Education Videos" button
-4. **Enter URL**: Paste video URL (automatic preview)
-5. **Messaging complete**: System displays sending result statistics
-
-## 🏗️ System Architecture
-
-### Frontend Technologies
-- **Next.js 14**: React framework with App Router
-- **NextAuth.js**: Authentication library with Google OAuth integration
-- **TypeScript**: Type-safe development environment
-- **CSS Modules**: Modular style management
-- **Responsive Design**: Mobile-first design approach
-
-### Backend Technologies
-- **Next.js API Routes**: Serverless functions with authentication middleware
-- **NextAuth.js**: Secure session management and OAuth integration
-- **MongoDB**: Document database for patient records
-- **LINE Message API**: Messaging communication integration
-- **Multi-database Support**: TCM clinic + LINE Bot databases
-
-### Database Structure
-```typescript
-interface Patient {
-  _id?: string;
-  name: string;
-  lineUserId?: string;  // LINE broadcast account
-  historyRecords: TCMHistoryRecord[];
-  createdAt: Date;
-  updatedAt: Date;
-  lastSyncedAt?: Date;  // Broadcast account sync time
-}
-
-interface TCMHistoryRecord {
-  visitDate: Date;
-  symptoms: string[];
-  syndromes: string[];
-  notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Zeabur 部署環境                        │
+│                                                           │
+│  ┌──────────────┐    ┌──────────────┐    ┌───────────┐ │
+│  │  Next.js     │◄──►│  n8n         │◄───│  MongoDB  │ │
+│  │  Web App     │    │  Workflow    │    │           │ │
+│  └──────┬───────┘    └──────┬───────┘    └───────────┘ │
+│         │                   │                            │
+└─────────┼───────────────────┼────────────────────────────┘
+          │                   │
+    ┌─────▼─────┐       ┌─────▼─────┐
+    │  醫師     │       │  患者     │
+    │  管理介面  │       │  LINE App │
+    └───────────┘       └───────────┘
 ```
 
-## 🔍 API Endpoints
+**核心技術棧：**
+- **前端框架：** Next.js 14 (App Router) + TypeScript
+- **資料庫：** MongoDB 7.0（文檔式資料庫）
+- **工作流引擎：** n8n（視覺化自動化）
+- **AI 服務：** Google Gemini 1.5 Flash（語意分類）
+- **即時通訊：** LINE Messaging API（Webhook + Push）
+- **認證系統：** NextAuth.js + Google OAuth 2.0
+- **知識庫：** Google Sheets（動態 FAQ 管理）
 
-### Authentication
-- `GET /api/auth/signin` - Google OAuth login page
-- `POST /api/auth/callback/google` - Google OAuth callback
-- `GET /api/auth/session` - Current user session
-- `POST /api/auth/signout` - User logout
+詳細架構說明請參考 [專案展示文檔](./docs/PORTFOLIO.md#技術架構)
 
-### Patient Management
-- `GET /api/users` - Search patients
-- `GET /api/users/[id]` - Get patient details
-- `POST /api/users` - Create new patient
-- `PUT /api/users/[id]/record` - Update latest record
+## 📦 專案結構
 
-### Records & Reports
-- `GET /api/records/weekly` - Get weekly records
-- `GET /api/health` - System health check
+```
+health-ed-system/
+├── docs/                      # 📚 文檔資料夾
+│   ├── PORTFOLIO.md          # 作品集展示文檔
+│   ├── WEB_APP.md            # Web App 技術文檔
+│   ├── LINEBOT.md            # LINE BOT 技術文檔
+│   ├── DEPLOYMENT.md         # 部署指南
+│   └── API.md                # API 參考文檔│
+│
+├── n8n/                      # 🤖 n8n 工作流定義
+│   └── linebot ai (completeness).json
+│
+├── src/
+│   ├── app/                  # Next.js App Router
+│   │   ├── api/              # API Routes
+│   │   │   ├── auth/         # NextAuth 認證
+│   │   │   ├── users/        # 患者管理
+│   │   │   ├── records/      # 醫療記錄
+│   │   │   ├── notifications/ # 訊息推播
+│   │   │   └── sync/         # LINE 用戶同步
+│   │   ├── edit/             # 編輯記錄頁面
+│   │   ├── patient/          # 患者詳情頁面
+│   │   └── records/          # 週報告頁面
+│   │
+│   ├── components/           # React 元件
+│   ├── lib/                  # 工具函式
+│   │   ├── mongodb.ts        # 資料庫連接
+│   │   ├── line-api.ts       # LINE API 客戶端
+│   │   └── api-client.ts     # API 請求封裝
+│   │
+│   ├── types/                # TypeScript 型別定義
+│   └── scripts/              # 資料庫設定腳本
+│
+├── .env.example              # 環境變數範本
+├── package.json              # 專案依賴
+└── next.config.js            # Next.js 配置
+```
 
-### Messaging Features
-- `POST /api/sync/line-users` - Sync LINE broadcast accounts
-- `POST /api/notifications/send` - Send broadcast notifications
-- `POST /api/link-preview` - Get link preview data
+## 🔧 開發指令
 
-## 🧪 Development Guide
-
-### Available Scripts
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint checks
-npm run setup-db     # Initialize database indexes
+# 開發模式
+npm run dev              # 啟動開發伺服器（localhost:3000）
+
+# 建置部署
+npm run build            # 建置生產版本
+npm run start            # 啟動生產伺服器
+
+# 程式碼品質
+npm run lint             # ESLint 檢查
+
+# 資料庫管理
+npm run setup-db         # 初始化資料庫索引
 ```
-
-### Code Structure
-```
-├── app/                 # Next.js App Router
-│   ├── api/            # API routes
-│   │   ├── auth/       # NextAuth authentication routes
-│   │   ├── sync/       # Broadcast account sync
-│   │   ├── notifications/ # Broadcast notifications
-│   │   └── users/      # Patient management
-│   ├── edit/           # Edit record pages
-│   ├── patient/        # Patient detail pages
-│   ├── records/        # Weekly records page
-│   └── globals.css     # Global styles
-├── components/         # React components
-├── lib/               # Utility functions
-│   ├── mongodb.ts     # Database connection
-│   ├── line-api.ts    # LINE API client
-│   └── auth.ts        # NextAuth configuration
-├── types/             # TypeScript type definitions
-└── scripts/           # Database setup scripts
-```
-
-## 🔐 Security
-
-### Data Protection
-- Environment variable encryption
-- SSL/TLS connection encryption
-- Input validation and filtering
-- Secure MongoDB connections
-- NextAuth.js secure session management
-- Google OAuth 2.0 authentication
-
-### Access Control
-- Google OAuth authentication required for all users
-- Secure session-based access control
-- Protected API routes with authentication middleware
-- Automatic session refresh and token management
-- Database connection restrictions
-- Secure environment variable handling
-
-## 📊 Performance Optimization
-
-### Optimization Measures
-- Database indexes for fast queries
-- Next.js automatic code splitting
-- Image optimization and compression
-- CDN static resource delivery
-
-### Monitoring Features
-- Health check endpoints
-- Error tracking and logging
-- Performance metrics monitoring
-- Database connection monitoring
-
-## 🆘 Troubleshooting
-
-### Common Issues
-- **Database connection problems**: Check MONGODB_URI format
-- **Build failures**: Ensure Node.js version (18+)
-- **Search functionality issues**: Ensure database indexes are created
-- **Messaging features not working**: Verify LINE API credentials setup
-- **Authentication issues**: Verify Google OAuth credentials and NextAuth configuration
-- **Session problems**: Check NEXTAUTH_SECRET and NEXTAUTH_URL settings
-
-### Getting Help
-- Review [Deployment Guide](./RENDER_DEPLOYMENT.md)
-- Check application logs
-- Test database connections
-- Verify environment variable configuration
-- Refer to [LINE Integration Guide](./LINE_INTEGRATION.md)
-
-## 🎯 Development Roadmap
-
-### Planned Features
-- [ ] Advanced reporting and analytics
-- [ ] Appointment scheduling system
-- [ ] Prescription management features
-- [ ] Multi-language support
-- [ ] Mobile app development
-- [ ] Role-based permissions (admin/staff/viewer)
-
-### Recent Updates
-- ✅ Google OAuth authentication with NextAuth.js
-- ✅ Protected routes and session management
-- ✅ LINE broadcast account sync functionality
-- ✅ Multi-keyword OR logic search
-- ✅ LINE broadcast notification system with preview
-- ✅ Multi-database support architecture
-- ✅ Responsive design improvements
-- ✅ Cloud deployment configuration
 
 ---
 
+**專案時間：** 2025年7月 - 10月  
+**開發角色：** 全端開發與系統架構規劃設計  
 **Built with ❤️ for Traditional Chinese Medicine practitioners**

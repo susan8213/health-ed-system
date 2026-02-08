@@ -1,0 +1,1122 @@
+{
+  "name": "linebot ai (completeness)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -3392,
+        224
+      ],
+      "id": "ba33c2bb-3782-4eec-b3ee-ff271edaf992",
+      "name": "Webhook",
+      "webhookId": "cdd1e3bb-2976-4f1a-ae8d-d238e69b52b0",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7c6c6074-3cce-4e69-97fc-8aa301b30e99",
+              "leftValue": "={{ $('Webhook').item.json.body.events[0].message.type }}",
+              "rightValue": "text",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "fd0ef0c6-8143-471c-98f2-fa476f444ab2",
+              "leftValue": "={{ $('Webhook').item.json.body.events[0].type }}",
+              "rightValue": "message",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "7f390ccc-95f4-46f1-984a-903c8b091262",
+              "leftValue": "={{ $json.activeDayList }}",
+              "rightValue": "={{ new Date().getDay() }}",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -2944,
+        224
+      ],
+      "id": "8fee0699-a9cc-48de-a177-2dea09c3a873",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -2944,
+        1088
+      ],
+      "id": "3feade49-ccdd-4b3b-b91c-60feebb6df32",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/home/node/data-sop.json",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -2720,
+        1088
+      ],
+      "id": "79b635c9-047e-4853-b632-a5b2cfeb64de",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/data-sop.json",
+        "options": {
+          "dataPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -2720,
+        128
+      ],
+      "id": "906c70aa-0fb3-43aa-9ecd-3ca8de888247",
+      "name": "Read data-sop.json"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -2496,
+        128
+      ],
+      "id": "710f7acd-006e-45cd-900d-df33a20de0ad",
+      "name": "Extract from data-sop.json"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "25281bae-e1df-4a0e-9a76-a2deec9ed8f1",
+              "leftValue": "={{ $json.shouldReply }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3dbdc5db-56e2-48bf-bcde-96a1ea01a045",
+      "name": "If will autoReply"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=replyToken",
+              "value": "={{ $('Webhook').item.json.body.events[0].replyToken }}"
+            },
+            {
+              "name": "messages",
+              "value": "={{ [{type: \"text\", text: $json.replyMessage }] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ccfef9f4-d9d2-4899-b05b-c7dd4f50965d",
+      "name": "HTTP Request - LINE Reply",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "9OwwudxF6h6qFcXW",
+          "name": "LINE Message API Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst sopData = $('Extract from data-sop.json').first().json.data;\nconst completenessWordCountThreshold = $('Config').first().json.completenessWordCount;\nconst confidenceThreshold = $('Config').first().json.confidence;\nconst sessionDays = $('Config').first().json.sessionDayDuration;\nconst message = $('Config').first().json.message ?? '';\n\nconst category = $('AI Agent').first().json.output?.category;\nconst confidence = $('AI Agent').first().json.output?.confidence ?? 0;\n\nlet repliedState = $('Find document').first().json.replied ?? [];\n\n\n\nconst now = new Date();\nconst minReplyTime = new Date(now.getTime() - (sessionDays * 24 * 60 * 60 * 1000));\nconst isIncomplete = message.length <= completenessWordCountThreshold;\nconst isConfident = confidence >= confidenceThreshold;\n\nlet shouldReply = false;\nlet replyMessage = undefined;\nif (category && isConfident) {\n  const sop = sopData.find(item => item['項目'] === category);\n  if (sop) {\n    let replied = repliedState.find(r => r.keyword == category );\n    if (!replied)\n    {\n      shouldReply = true;\n      repliedState.push({\n        keyword: category,\n        timestamp: now,\n      });\n    }\n    else if (new Date(replied.timestamp) < minReplyTime)\n    {\n      shouldReply = true;\n      replied.timestamp = now;\n    }\n\n    if (!isIncomplete)\n    {\n      shouldReply = false;\n    }\n\n    if (shouldReply)\n    {\n      replyMessage = sop['回覆'];\n    }\n  }\n}\n\n// for (const item of sopData) {\n//   const sopType = item.項目;\n//   const keywords = item.關鍵字.split('\\n');\n  \n//   const hasKeyword = keywords.some(keyword => message.includes(keyword));\n//   if (hasKeyword)\n//   {\n//     let replied = userStates.replied.find(r => r.keyword == sopType );\n//     if (!replied)\n//     {\n//       shouldReply = true;\n//       userStates.replied.push({\n//         keyword: sopType,\n//         timestamp: now,\n//       });\n//     }\n//     else if (new Date(replied.timestamp) < minReplyTime)\n//     {\n//       shouldReply = true;\n//       replied.timestamp = now;\n//     }\n//     replyMessage = item.回覆;\n//     break;\n//   }\n// }\n\nreturn {\n  shouldReply,\n  replyMessage,\n  repliedState,\n  minReplyTime,\n  isIncomplete,\n  isConfident,\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        128
+      ],
+      "id": "77c6e77f-b25b-4f3b-8cb3-8e0c7acc9eff",
+      "name": "AutoReply Logic1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b9d9b4ad-db82-48d6-beeb-b678f76b76d8",
+              "name": "userId",
+              "value": "={{ $('Config').item.json.userId }}",
+              "type": "string"
+            },
+            {
+              "id": "bfb203bb-a755-4c1f-88da-5a0a847bf3a7",
+              "name": "replied",
+              "value": "={{ $('AutoReply Logic1').item.json.repliedState }}",
+              "type": "array"
+            },
+            {
+              "id": "9af5a32c-01bd-4766-8a70-84714c37175d",
+              "name": "messages",
+              "value": "={{ ($('Find document').item.json.messages ?? []).append({\"message\": $('Config').item.json.message, \"timestamp\": new Date($('Config').item.json.timestamp) }) }}",
+              "type": "array"
+            },
+            {
+              "id": "3ce0a984-6e3c-4ae0-a151-4a2257cbf029",
+              "name": "transactionId",
+              "value": null,
+              "type": "number"
+            },
+            {
+              "id": "bceb0a17-6f00-4abc-b261-575043fa7f42",
+              "name": "transactionStartTime",
+              "value": null,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": true
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        192
+      ],
+      "id": "3e06095b-60d0-4993-b189-3ad74afcfda4",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1sbZSO2KTBMWKnMMmP9ysx03kfYi6yP_WJ_aati-vW64",
+          "mode": "list",
+          "cachedResultName": "lineOA FAQ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sbZSO2KTBMWKnMMmP9ysx03kfYi6yP_WJ_aati-vW64/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "工作表1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sbZSO2KTBMWKnMMmP9ysx03kfYi6yP_WJ_aati-vW64/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -3168,
+        1088
+      ],
+      "id": "aeb90c11-2040-449f-a841-a9a05146c1ad",
+      "name": "Get row(s) in sheet",
+      "executeOnce": true,
+      "credentials": {
+        "googleApi": {
+          "id": "3PYRlVAbK4SekQrk",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Config').item.json.message }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=你是中醫診所助理，請根據以下分類標準將患者訊息分類：\n\n{{ $('Extract from data-sop.json').item.json.data.map(item => `**${item['項目']}** (參考概念: ${item['關鍵字'].replace('\\n', ',')})`).join('\\n')}}\n\n## 分類原則：\n1. **嚴格分類**：category 欄位只能填寫上述可用分類項目的確切名稱，或填 null\n2. **關鍵詞引導**：參考概念是醫師設定的核心關鍵詞，幫助你理解該分類的範圍\n3. **語意擴展**：不只看確切關鍵詞，要理解相關的同義詞、近義詞、口語化表達\n4. **中醫診所情境**：在中醫就診的語境下理解患者意圖\n\n## 重要排除規則：\n**不要分類的情況（category 必須填 null）：**\n- 患者回報症狀改善、好轉、比較好\n- 患者描述治療效果良好\n- 患者只是回應醫師詢問狀況，而非主動求診\n- 完全不相關的閒聊\n\n## 範例分析：\n- 訊息：\"腸胃有比較好\" → category: null (改善回報，不需分類)\n- 訊息：\"睡眠改善很多，謝謝醫師\" → category: null (治療效果良好)\n- 訊息：\"咳嗽好多了\" → category: null (症狀好轉)\n- 訊息：\"我一直咳嗽很嚴重\" → 主要訴求：咳嗽症狀(90%)，category: \"咳嗽\"\n- 訊息：\"我要拿藥\" → 主要訴求：複診拿藥(100%)，category: \"拿一樣的藥\"\n- 訊息：\"明天會去拿藥，謝謝醫師\" → category: \"拿一樣的藥\" (拿藥意圖+感謝)\n- 訊息：\"最近又開始失眠了\" → 主要訴求：睡眠困擾(90%)，category: \"失眠\"\n\n## 嚴格規則：\n- **禁止自創分類名稱**：絕對不能填寫「無分類」、「feedback」、「其他」等不在上述列表的名稱\n- **只能選擇現有分類**：category 必須是上述可用分類的確切名稱或 null\n- **無法判斷時填 null**：寧可填 null 也不要亂猜分類\n\n## 患者的歷史訊息 (若為空，則為患者無歷史訊息):\n{{ ($('chat histories').item.json.messages ?? []).map(item => `- ${item.message} (timestamp: ${item.timestamp})`).join('\\\\n') }}\n\n請以以下JSON格式回答：\n{\n  \"category\": \"最符合的分類名稱或null\",\n  \"confidence\": 85,\n  \"intent\": \"主要訴求描述\",\n  \"intent_weight\": 80\n}\n\n注意：\n- 如果是改善回報或狀況詢問回應，category 填 null\n- 如果完全無法分類到任何項目，category 填 null\n- confidence 為 0-100 的信心度分數\n- intent_weight 為主要訴求在整個訊息中的權重百分比\n- 絕對不能自創分類名稱\n- 無法確定分類時必須填 null"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -1712,
+        224
+      ],
+      "id": "3c711781-47b8-41ea-adc8-8bb2f46f5c09",
+      "name": "AI Agent",
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1808,
+        656
+      ],
+      "id": "100dbdcc-5d02-4a80-be0f-372ae2417c08",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xjVhu3M0MBn1zSU1",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"category\": \"失眠\",\n  \"confidence\": 85,\n  \"intent\": \"睡眠困擾\", \n  \"intent_weight\": 80\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -1536,
+        448
+      ],
+      "id": "d9765ee8-dc39-4589-931b-d4b1cae337ee",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "738346b6-6465-40f5-80fe-a66c0cbf76ee",
+              "name": "categories",
+              "value": "={{ $json.data.map(item => item['項目']) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2272,
+        128
+      ],
+      "id": "90df5294-a9fd-44e4-aae6-2aa652208dbf",
+      "name": "Categories"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2048,
+        224
+      ],
+      "id": "2bf61fa3-ba8a-43ce-af0e-36dfb223327e",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a19e98cc-b56d-42ba-95c7-91635f47a28a",
+              "name": "messages",
+              "value": "={{ $json.messages.sort(x => new Date(x.timestamp) ) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2272,
+        320
+      ],
+      "id": "791c4f76-a7b4-4472-8835-34ff263cd972",
+      "name": "chat histories"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -3392,
+        1088
+      ],
+      "id": "98e4bd1a-82b8-430f-8b58-f6b6ab92541d",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rule": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b9b81988-9ad9-41cc-a696-eb66a33dfd8e",
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.modelSelector",
+      "typeVersion": 1,
+      "position": [
+        -1824,
+        448
+      ],
+      "id": "8a52f8f0-468d-4670-9647-09e5e5a6ddcd",
+      "name": "Model Selector"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "options": {
+          "responseFormat": "json_object"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3392,
+        880
+      ],
+      "id": "ab9944d0-b2a8-451e-9380-8104a379a52d",
+      "name": "OpenAI Chat Model",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1680,
+        656
+      ],
+      "id": "1479ab86-61e5-4af8-85ab-fce037a23e81",
+      "name": "FAKE",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xjVhu3M0MBn1zSU1",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "aggregate",
+        "collection": "patient",
+        "query": "=[\n  { \"$match\": { \"userId\": \"{{$('Config').item.json.userId}}\" } },\n  {\n    \"$project\": {\n      \"messages\": {\n        \n            \"$filter\": {\n              \"input\": { \"$ifNull\": [\"$messages\", []] },\n              \"as\": \"msg\",\n              \"cond\": {\n                \"$gte\": [\n                  { \"$toDate\": \"$$msg.timestamp\" },\n                  { \"$dateSubtract\": { \"startDate\": \"$$NOW\", \"unit\": \"day\", \"amount\": {{ $('Config').item.json.sessionDayDuration }} } }\n                ]\n              }\n            }\n      },\n      \"replied\": 1,\n      \"transactionId\": { \"$ifNull\": [\"$transactionId\", null] },\n      \"transactionStartTime\": { \"$ifNull\": [\"$transactionStartTime\", null] }\n    }\n  }\n]\n"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -1328,
+        224
+      ],
+      "id": "0e143b15-cf9d-40d0-9327-bb3eacda9f13",
+      "name": "Find document",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "ywbMroFOkxgtALy9",
+          "name": "MongoDB account - Zeabur"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "aggregate",
+        "collection": "patient",
+        "query": "=[\n  { \"$match\": { \"userId\": \"{{ $('Config').item.json.userId }}\" } },\n  {\n    \"$project\": {\n      \"replied\": 1,\n      \"messages\": {\n        \"$filter\": {\n          \"input\": \"$messages\",\n          \"as\": \"msg\",\n          \"cond\": {\n            \"$gte\": [\n              \"$$msg.timestamp\",\n              {\n                \"$dateSubtract\": {\n                  \"startDate\": \"$$NOW\",\n                  \"unit\": \"day\",\n                  \"amount\": {{ $('Config').item.json.sessionDayDuration }}\n                }\n              }\n            ]\n          }\n        }\n      }\n    \n    }\n  }\n]"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -2496,
+        320
+      ],
+      "id": "36a4ae50-5f77-4e6f-8aba-ec3cf46e9b2a",
+      "name": "find chat histories in 4 days",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "ywbMroFOkxgtALy9",
+          "name": "MongoDB account - Zeabur"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2b90096b-9b19-4410-a761-f78220d94158",
+              "name": "completenessWordCount",
+              "value": 30,
+              "type": "number"
+            },
+            {
+              "id": "1f7bd63c-4dba-4f4f-9659-ecf9e5a0e979",
+              "name": "confidence",
+              "value": 0,
+              "type": "number"
+            },
+            {
+              "id": "a948918d-c9e4-417c-9b12-2e66ffc27eab",
+              "name": "sessionDayDuration",
+              "value": 4,
+              "type": "number"
+            },
+            {
+              "id": "5d0b569f-229c-498f-ae9b-9f2e63b04244",
+              "name": "activeDayList",
+              "value": "[0,1,2,3]",
+              "type": "array"
+            },
+            {
+              "id": "a8be33e4-63ee-43c2-8fac-6158d5ae2acc",
+              "name": "maxRetries",
+              "value": 6,
+              "type": "number"
+            },
+            {
+              "id": "a6cae2d4-630c-4519-b2e2-069eb11a589d",
+              "name": "transactionTimeoutInSeconds",
+              "value": 30,
+              "type": "number"
+            },
+            {
+              "id": "363e00de-9634-4d7d-8a83-f0c761db05c2",
+              "name": "userId",
+              "value": "={{ $json.body.events[0].source.userId }}",
+              "type": "string"
+            },
+            {
+              "id": "5c65194e-0b73-456a-99b4-2e688ac0854a",
+              "name": "message",
+              "value": "={{ $json.body.events[0].message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "b20a04fb-453b-41f3-a3c7-dc38a816a07d",
+              "name": "replyToken",
+              "value": "={{ $json.body.events[0].replyToken }}",
+              "type": "string"
+            },
+            {
+              "id": "71333249-4255-4574-b9e4-26a7f274668a",
+              "name": "timestamp",
+              "value": "={{ $json.body.events[0].timestamp }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3168,
+        224
+      ],
+      "id": "a867234d-9053-4193-bce4-3e469a7160c9",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "07a877fe-c54f-47e0-9347-e08c2005391b",
+              "leftValue": "={{ $json.transactionId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "19f98fae-a006-46cd-8056-db6ee5f18c86",
+              "leftValue": "={{ $json.transactionId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "dabcb937-dc1e-49b4-a375-9a8af6591343",
+              "leftValue": "={{ $json.transactionId }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "2658df6d-dd39-483b-862c-05324d20ad7c",
+              "leftValue": "={{ Date.now() - new Date($json.transactionStartTime).getTime() }}",
+              "rightValue": "={{ $('Config').item.json.transactionTimeoutInSeconds }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1104,
+        144
+      ],
+      "id": "1e4416a5-3df5-41bf-9ced-ff533578ab68",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "amount": "={{ (Math.random() * 2000 + 500) / 1000 }}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -976,
+        240
+      ],
+      "id": "087d95ab-f8a1-42b2-a732-c664484f9ca9",
+      "name": "Wait",
+      "webhookId": "bacb63cf-c156-45d3-9c5e-dda3a1c76510"
+    },
+    {
+      "parameters": {
+        "operation": "findOneAndUpdate",
+        "collection": "patient",
+        "updateKey": "userId",
+        "fields": "transactionId,transactionStartTime",
+        "upsert": true,
+        "options": {
+          "dateFields": "transactionStartTime"
+        }
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        128
+      ],
+      "id": "85bf04e5-9aff-45ff-8844-c45572e07714",
+      "name": "Start Transaction",
+      "credentials": {
+        "mongoDb": {
+          "id": "ywbMroFOkxgtALy9",
+          "name": "MongoDB account - Zeabur"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8d9f073d-6168-427e-a72e-5698bcaf6c4b",
+              "name": "userId",
+              "value": "={{ $('Config').item.json.userId }}",
+              "type": "string"
+            },
+            {
+              "id": "ac93efae-2186-47d0-b2f8-a9d10d97d049",
+              "name": "transactionId",
+              "value": "={{ $('Config').item.json.timestamp }}",
+              "type": "number"
+            },
+            {
+              "id": "9020587c-bdd1-4a1a-87d6-647dca60ac92",
+              "name": "transactionStartTime",
+              "value": "={{ new Date() }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -816,
+        128
+      ],
+      "id": "91e3e8de-912b-424b-970b-e72bc28fdeda",
+      "name": "Edit TransactionId"
+    },
+    {
+      "parameters": {
+        "operation": "findOneAndUpdate",
+        "collection": "patient",
+        "updateKey": "userId",
+        "fields": "=replied,messages,transactionId,transactionStartTime",
+        "upsert": true,
+        "options": {
+          "dateFields": "timestamp,transactionStartTime"
+        }
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        192
+      ],
+      "id": "73b9e39d-d35b-41df-a3fb-fedca1316fe9",
+      "name": "Update document & Stop Transaction",
+      "credentials": {
+        "mongoDb": {
+          "id": "ywbMroFOkxgtALy9",
+          "name": "MongoDB account - Zeabur"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Read data-sop.json",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "find chat histories in 4 days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read data-sop.json": {
+      "main": [
+        [
+          {
+            "node": "Extract from data-sop.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from data-sop.json": {
+      "main": [
+        [
+          {
+            "node": "Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If will autoReply": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - LINE Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AutoReply Logic1": {
+      "main": [
+        [
+          {
+            "node": "If will autoReply",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Update document & Stop Transaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Categories": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "chat histories": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Find document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model Selector": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FAKE": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Find document": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "find chat histories in 4 days": {
+      "main": [
+        [
+          {
+            "node": "chat histories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit TransactionId",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Find document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Transaction": {
+      "main": [
+        [
+          {
+            "node": "AutoReply Logic1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit TransactionId": {
+      "main": [
+        [
+          {
+            "node": "Start Transaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ad95c773-5add-498f-bafe-fa537390c673",
+  "meta": {
+    "instanceId": "0bb94c505c6f0fc6cd0afe6da264d7ddc72507b2d0216f130fbb52aa44cc3ac7"
+  },
+  "id": "NZAVjJlqKFH9UUCP",
+  "tags": [
+    {
+      "createdAt": "2025-09-20T16:24:15.226Z",
+      "updatedAt": "2025-09-20T16:24:15.226Z",
+      "id": "hl7Ak5rIF1kKDVF0",
+      "name": "2.3"
+    }
+  ]
+}
